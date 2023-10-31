@@ -1,6 +1,7 @@
-import { IPaginationPayload, IPaginationValue } from './interface';
-
-export const pagination = (data: IPaginationPayload): IPaginationValue => {
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.pagination = void 0;
+const pagination = data => {
   const {
     page = 1,
     limit = 10,
@@ -18,3 +19,4 @@ export const pagination = (data: IPaginationPayload): IPaginationValue => {
   };
   return options;
 };
+exports.pagination = pagination;
