@@ -11,3 +11,16 @@ export interface IPaginationValue {
   orderBy: unknown;
   page: number;
 }
+export interface IMeta {
+  page?: number;
+  size?: number;
+  total?: number;
+  totalPage?: number;
+}
+export interface IApiResponse<T> {
+  statusCode: number;
+  success: boolean;
+  message?: string | null;
+  meta?: IMeta;
+  data?: T | null;
+}
