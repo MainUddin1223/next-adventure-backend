@@ -1,6 +1,8 @@
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import config from './utils/config';
+import router from './route';
 
 const app: Application = express();
 const corsOptions = {
@@ -10,6 +12,8 @@ const corsOptions = {
 app.use('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(config.api_route as string, router);
 
 app.use('/test', (req, res) => {
   const message = `Server is running ${new Date()}`;

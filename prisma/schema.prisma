@@ -30,7 +30,7 @@ model Agency {
   authId       Int
   name         String
   contactInfo  String
-  profilePic   String
+  profileImg   String
   featured     Boolean  @default(false)
   totalReviews Int      @default(0)
   totalStar    Decimal  @default(0) @db.Decimal(10, 2)
@@ -47,12 +47,14 @@ model User {
   id         Int      @id @default(autoincrement())
   auth       Auth     @relation(fields: [authId], references: [id])
   authId     Int
-  profilePic String?
+  profileImg String?
   name       String?
   contactNo  String?
   about      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@map("users")
 }
 
 enum Role {
