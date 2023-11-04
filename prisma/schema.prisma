@@ -9,3 +9,61 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Auth {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  role          Role          @default(user)
+  accountStatus AccountStatus @default(active)
+  agency        Agency[]
+  user          User[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("auth")
+}
+
+model Agency {
+  id           Int      @id @default(autoincrement())
+  auth         Auth     @relation(fields: [authId], references: [id])
+  authId       Int
+  name         String
+  contactInfo  String
+  profilePic   String
+  featured     Boolean  @default(false)
+  totalReviews Int      @default(0)
+  totalStar    Decimal  @default(0) @db.Decimal(10, 2)
+  rating       Decimal  @default(0) @db.Decimal(10, 2)
+  location     String
+  about        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("agencies")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  auth       Auth     @relation(fields: [authId], references: [id])
+  authId     Int
+  profilePic String?
+  name       String?
+  contactNo  String?
+  about      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Role {
+  admin
+  user
+  super_admin
+  agency
+}
+
+enum AccountStatus {
+  active
+  deleted
+  suspended
+}
