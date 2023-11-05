@@ -30,7 +30,6 @@ const registerAgency = catchAsync(async (req: Request, res: Response) => {
   const { error } = await agencyRegisterSchema.validate(req.body);
 
   if (error) {
-    console.log(error.details);
     sendResponse(res, {
       statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       success: false,
@@ -48,4 +47,25 @@ const registerAgency = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-export const authController = { signUp, registerAgency };
+const login = catchAsync(async (req: Request, res: Response) => {
+  const { error } = await signUpSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: error.details[0]?.message,
+      data: error.details,
+    });
+  } else {
+    const result = await authService.login(req.body);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: 'Successfully logged in',
+      data: result,
+    });
+  }
+});
+
+export const authController = { signUp, registerAgency, login };

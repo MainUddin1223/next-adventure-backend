@@ -3,6 +3,9 @@ import bcrypt from 'bcrypt';
 import { IRegisterPayload, ISignUpPayload } from './auth.interface';
 import { jwtToken } from '../../utils/auth_jwt/jwtToken';
 import config from '../../utils/config';
+import ApiError from '../../utils/errorHandlers/apiError';
+import { StatusCodes } from 'http-status-codes';
+import { getAgencyAuthInfo, getUserAuthInfo } from './auth.utils';
 
 const prisma = new PrismaClient();
 
@@ -43,7 +46,10 @@ const signUp = async (payload: ISignUpPayload) => {
     config.jwt.expires_in as string
   );
 
-  return accessToken;
+  return {
+    accessToken,
+    profileData: { profileImg: result.userInfo.profileImg },
+  };
 };
 
 const registerAgency = async (payload: IRegisterPayload) => {
@@ -72,19 +78,64 @@ const registerAgency = async (payload: IRegisterPayload) => {
     return { agencyData, auth };
   });
 
-  const accessData = {
+  const authData = {
     role: result.auth.role,
     authId: result.auth.id,
     userId: result.agencyData.id,
   };
 
   const accessToken = await jwtToken.createToken(
-    accessData,
+    authData,
     config.jwt.jwt_access_secret as string,
     config.jwt.expires_in as string
   );
 
-  return accessToken;
+  return {
+    accessToken,
+    profileData: { profileImg: result.agencyData.profileImg },
+  };
 };
 
-export const authService = { signUp, registerAgency };
+const login = async (payload: ISignUpPayload) => {
+  const { email, password } = payload;
+  const isUserExist = await prisma.auth.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Something went wrong'
+    );
+  }
+
+  const isPasswordMatched = await bcrypt.compare(
+    password,
+    isUserExist.password
+  );
+  if (!isPasswordMatched) {
+    throw new ApiError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Something went wrong'
+    );
+  }
+
+  if (isUserExist?.accountStatus !== 'active') {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      `Your account is ${isUserExist.accountStatus}`
+    );
+  }
+
+  if (isUserExist.role === 'agency') {
+    const accessToken = await getAgencyAuthInfo(isUserExist.id);
+    return accessToken;
+  } else {
+    const accessToken = await getUserAuthInfo(isUserExist.id);
+    return accessToken;
+  }
+};
+
+export const authService = { signUp, registerAgency, login };
