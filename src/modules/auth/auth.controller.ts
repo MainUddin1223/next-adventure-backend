@@ -77,9 +77,28 @@ const getProfileData = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Successfully logged in',
+    message: 'Profile data fetched successfully',
     data: result,
   });
 });
 
-export const authController = { signUp, registerAgency, login, getProfileData };
+const deleteAccount = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const { authId } = req.user;
+  const result = await authService.deleteAccount(authId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Account deleted successfully',
+    data: result,
+  });
+});
+
+export const authController = {
+  signUp,
+  registerAgency,
+  login,
+  getProfileData,
+  deleteAccount,
+};

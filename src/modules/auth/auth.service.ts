@@ -170,4 +170,28 @@ const getProfile = async (id: number, role: string) => {
     return result;
   }
 };
-export const authService = { signUp, registerAgency, login, getProfile };
+
+const deleteAccount = async (id: number) => {
+  const result = await prisma.auth.update({
+    where: {
+      id,
+    },
+    data: {
+      accountStatus: 'deleted',
+    },
+  });
+  if (!result) {
+    throw new ApiError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Something went wrong'
+    );
+  }
+  return 'Account deleted successfully';
+};
+export const authService = {
+  signUp,
+  registerAgency,
+  login,
+  getProfile,
+  deleteAccount,
+};
