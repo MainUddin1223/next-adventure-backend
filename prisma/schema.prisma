@@ -39,6 +39,7 @@ model Agency {
   about        String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  plans        Plan[]
 
   @@map("agencies")
 }
@@ -57,11 +58,43 @@ model User {
   @@map("users")
 }
 
+model Plan {
+  id             Int        @id @default(autoincrement())
+  agency         Agency     @relation(fields: [agencyId], references: [id])
+  agencyId       Int
+  planName       String
+  destination    String
+  departureFrom  String
+  coverLocations String[]
+  price          Decimal    @db.Decimal(10, 2)
+  images         String[]
+  duration       String
+  description    String
+  departureTime  DateTime
+  meals          String
+  events         String[]
+  notAllowed     String[]
+  deadline       DateTime
+  featured       Boolean    @default(false)
+  status         PlanStatus @default(available)
+  totalSeats     Int
+  availableSeat  Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
 enum Role {
   admin
   user
   super_admin
   agency
+}
+
+enum PlanStatus {
+  available
+  closed
+  canceled
+  suspended
 }
 
 enum AccountStatus {
