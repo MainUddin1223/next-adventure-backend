@@ -5,6 +5,7 @@ export const agencyControllerMsg = {
   createPlanSchemaError: 'Fail to create plan',
   upcomingSchedulesSuccess: 'Upcoming schedules retrieved successfully',
   plansSuccess: 'Plans retrieved successfully',
+  planDetailsSuccess: 'Plan details retrieved successfully',
 };
 export const agencyServiceMsg = {
   updatePlanError: 'Deadline is over.You can not update this plan',

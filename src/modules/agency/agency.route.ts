@@ -11,6 +11,9 @@ router
   .route('/upcoming-schedules')
   .get(verifyAgency, agencyController.getUpcomingSchedules);
 router.route('/plans').get(verifyAgency, agencyController.getAllPlans);
-router.route('/plan/:id').patch(verifyAgency, agencyController.updateTourPlan);
+router
+  .route('/plan/:id')
+  .patch(verifyAgency, agencyController.updateTourPlan)
+  .get(verifyAgency, agencyController.getPlanDetails);
 
 export default { agencyRouter: router };

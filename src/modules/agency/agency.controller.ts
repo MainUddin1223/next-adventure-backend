@@ -62,6 +62,18 @@ const updateTourPlan = catchAsync(async (req: Request, res: Response) => {
     });
   }
 });
+const getPlanDetails = catchAsync(async (req: Request, res: Response) => {
+  const agencyId = Number(req?.user?.userId);
+  const planId = Number(req.params.id);
+  const result = await agencyService.getPlanDetails(planId, agencyId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: agencyControllerMsg.planDetailsSuccess,
+    data: result,
+  });
+});
 
 const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pagination({
@@ -106,4 +118,5 @@ export const agencyController = {
   getUpcomingSchedules,
   getAllPlans,
   updateTourPlan,
+  getPlanDetails,
 };

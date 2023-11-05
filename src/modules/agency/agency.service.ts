@@ -36,6 +36,11 @@ const updateTourPlan = async (planId: number, data: Partial<IPlanData>) => {
   return result;
 };
 
+const getPlanDetails = async (id: number, agencyId: number) => {
+  const result = await prisma.plan.findFirst({ where: { id, agencyId } });
+  return result;
+};
+
 const getScheduledPlans = async (
   meta: IPaginationValue,
   filterOptions: IFilterOption,
@@ -138,4 +143,5 @@ export const agencyService = {
   updateTourPlan,
   getScheduledPlans,
   getAllPlans,
+  getPlanDetails,
 };
