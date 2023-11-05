@@ -2,6 +2,7 @@
 import express from 'express';
 import config from '../utils/config';
 import authRouter from '../modules/auth/auth.route';
+import agencyRouter from '../modules/agency/agency.route';
 const router = express.Router();
 
 const defaultRoutes = [
@@ -9,10 +10,10 @@ const defaultRoutes = [
     path: '/auth',
     route: authRouter.authRouter,
   },
-  // {
-  //     path: '/agency',
-  //     route: agencyRouter.agencyRouter,
-  // },
+  {
+    path: '/agency',
+    route: agencyRouter.agencyRouter,
+  },
   // {
   //     path: '/user',
   //     route: userRouter.userRouter,

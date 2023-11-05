@@ -4,6 +4,7 @@ import { authService } from './auth.service';
 import sendResponse from '../../utils/helpers/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import { agencyRegisterSchema, signUpSchema } from './auth.validation';
+import { authResponseMessage } from './auth.constant';
 
 const signUp = catchAsync(async (req: Request, res: Response) => {
   const { error } = await signUpSchema.validate(req.body);
@@ -12,7 +13,7 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       success: false,
-      message: error.details[0]?.message || 'Sign up failed',
+      message: error.details[0]?.message || authResponseMessage.signUpFailed,
       data: error.details,
     });
   } else {
@@ -20,7 +21,7 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: 'Signup successful',
+      message: authResponseMessage.signUpSuccessful,
       data: result,
     });
   }
@@ -33,7 +34,8 @@ const registerAgency = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       success: false,
-      message: error.details[0]?.message || 'Sign up failed',
+      message:
+        error.details[0]?.message || authResponseMessage.agencyRegisterFailed,
       data: error.details,
     });
   } else {
@@ -41,7 +43,7 @@ const registerAgency = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: 'Agency registered successfully',
+      message: authResponseMessage.agencyRegisterSuccessful,
       data: result,
     });
   }
@@ -62,7 +64,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: 'Successfully logged in',
+      message: authResponseMessage.loginSuccessful,
       data: result,
     });
   }
@@ -72,12 +74,11 @@ const getProfileData = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const { userId, role } = req.user;
-  console.log(req.user);
   const result = await authService.getProfile(userId, role);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Profile data fetched successfully',
+    message: authResponseMessage.profileDataMsg,
     data: result,
   });
 });
@@ -90,7 +91,7 @@ const deleteAccount = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Account deleted successfully',
+    message: authResponseMessage.accountDeleteMsg,
     data: result,
   });
 });

@@ -78,7 +78,7 @@ model Plan {
   featured       Boolean    @default(false)
   status         PlanStatus @default(available)
   totalSeats     Int
-  availableSeat  Int        @default(0)
+  totalBooking   Int        @default(0)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 }

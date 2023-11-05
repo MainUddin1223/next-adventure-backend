@@ -6,6 +6,7 @@ import config from '../../utils/config';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
 import { getAgencyAuthInfo, getUserAuthInfo } from './auth.utils';
+import { authServiceMessage } from './auth.constant';
 
 const prisma = new PrismaClient();
 
@@ -107,7 +108,7 @@ const login = async (payload: ISignUpPayload) => {
   if (!isUserExist) {
     throw new ApiError(
       StatusCodes.INTERNAL_SERVER_ERROR,
-      'Something went wrong'
+      authServiceMessage.serverErrorMsg
     );
   }
 
@@ -118,14 +119,14 @@ const login = async (payload: ISignUpPayload) => {
   if (!isPasswordMatched) {
     throw new ApiError(
       StatusCodes.INTERNAL_SERVER_ERROR,
-      'Something went wrong'
+      authServiceMessage.serverErrorMsg
     );
   }
 
   if (isUserExist?.accountStatus !== 'active') {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
-      `Your account is ${isUserExist.accountStatus}`
+      `${authServiceMessage.accountStatusMsg} ${isUserExist.accountStatus}`
     );
   }
 
@@ -183,10 +184,10 @@ const deleteAccount = async (id: number) => {
   if (!result) {
     throw new ApiError(
       StatusCodes.INTERNAL_SERVER_ERROR,
-      'Something went wrong'
+      authServiceMessage.serverErrorMsg
     );
   }
-  return 'Account deleted successfully';
+  return authServiceMessage.deleteAccountMsg;
 };
 export const authService = {
   signUp,
