@@ -22,31 +22,33 @@ const verifyAuthWithRole = (allowedRoles: string[]) => {
         return res.status(401).json({ message: 'Unauthorized' });
       }
       if (decoded.role === 'agency') {
-        isExist = await prisma.auth.findUnique({
+        isExist = await prisma.agency.findUnique({
           where: {
-            id: decoded.authId,
-            accountStatus: 'active',
+            id: decoded.userId,
           },
           select: {
             id: true,
-            agency: {
+            auth: {
               select: {
                 id: true,
+                role: true,
+                accountStatus: true,
               },
             },
           },
         });
       } else {
-        isExist = await prisma.auth.findUnique({
+        isExist = await prisma.user.findUnique({
           where: {
-            id: decoded.authId,
-            accountStatus: 'active',
+            id: decoded.userId,
           },
           select: {
             id: true,
-            user: {
+            auth: {
               select: {
                 id: true,
+                role: true,
+                accountStatus: true,
               },
             },
           },
@@ -56,7 +58,11 @@ const verifyAuthWithRole = (allowedRoles: string[]) => {
       if (!isExist?.id || !allowedRoles.includes(req.user?.role)) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
-      req.user = isExist;
+      req.user = {
+        authId: isExist.auth.id,
+        role: isExist.auth.role,
+        userId: isExist.id,
+      };
       next();
     } catch (error) {
       next(error);
@@ -80,37 +86,46 @@ const verifyAuth = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     if (decoded.role === 'agency') {
-      isExist = await prisma.auth.findUnique({
+      isExist = await prisma.agency.findUnique({
         where: {
-          id: decoded.authId,
-          accountStatus: 'active',
+          id: decoded.userId,
         },
         select: {
           id: true,
-          agency: {
+          auth: {
             select: {
               id: true,
+              role: true,
+              accountStatus: true,
             },
           },
         },
       });
     } else {
-      isExist = await prisma.auth.findUnique({
+      isExist = await prisma.user.findUnique({
         where: {
-          id: decoded.authId,
-          accountStatus: 'active',
+          id: decoded.userId,
         },
         select: {
           id: true,
-          user: {
+          auth: {
             select: {
               id: true,
+              role: true,
+              accountStatus: true,
             },
           },
         },
       });
     }
-    req.user = isExist;
+    if (isExist?.auth.accountStatus !== 'active') {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    req.user = {
+      authId: isExist.auth.id,
+      role: isExist.auth.role,
+      userId: isExist.id,
+    };
     next();
   } catch (error) {
     next(error);

@@ -138,4 +138,36 @@ const login = async (payload: ISignUpPayload) => {
   }
 };
 
-export const authService = { signUp, registerAgency, login };
+const getProfile = async (id: number, role: string) => {
+  if (role === 'agency') {
+    const result = await prisma.agency.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        name: true,
+        contactNo: true,
+        profileImg: true,
+        featured: true,
+        totalReviews: true,
+        rating: true,
+        about: true,
+      },
+    });
+    return result;
+  } else {
+    const result = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        name: true,
+        contactNo: true,
+        about: true,
+        profileImg: true,
+      },
+    });
+    return result;
+  }
+};
+export const authService = { signUp, registerAgency, login, getProfile };

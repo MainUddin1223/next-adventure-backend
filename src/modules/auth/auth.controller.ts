@@ -68,4 +68,18 @@ const login = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-export const authController = { signUp, registerAgency, login };
+const getProfileData = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const { userId, role } = req.user;
+  console.log(req.user);
+  const result = await authService.getProfile(userId, role);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Successfully logged in',
+    data: result,
+  });
+});
+
+export const authController = { signUp, registerAgency, login, getProfileData };
