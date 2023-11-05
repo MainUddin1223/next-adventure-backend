@@ -71,10 +71,10 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getProfileData = catchAsync(async (req: Request, res: Response) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  const { userId, role } = req.user;
-  const result = await authService.getProfile(userId, role);
+  const result = await authService.getProfile(
+    req?.user?.userId,
+    req?.user?.role
+  );
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -84,10 +84,7 @@ const getProfileData = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteAccount = catchAsync(async (req: Request, res: Response) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  const { authId } = req.user;
-  const result = await authService.deleteAccount(authId);
+  const result = await authService.deleteAccount(req.user?.authId);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

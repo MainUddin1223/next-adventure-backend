@@ -55,7 +55,7 @@ const verifyAuthWithRole = (allowedRoles: string[]) => {
         });
       }
 
-      if (!isExist?.id || !allowedRoles.includes(req.user?.role)) {
+      if (!isExist?.id || !allowedRoles.includes(isExist.auth?.role)) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
       req.user = {
