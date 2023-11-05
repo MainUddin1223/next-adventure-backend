@@ -3,12 +3,15 @@ export interface ILoginPayload {
   password: string;
 }
 
-export interface IRegisterPayload {
+export interface ISignUpPayload {
   name: string;
-  role: 'user';
   email: string;
   contactNo: string;
-  about: string;
   profileImg: string;
+  about: string;
   password: string;
+}
+
+export interface IRegisterPayload extends ISignUpPayload {
+  location: string;
 }

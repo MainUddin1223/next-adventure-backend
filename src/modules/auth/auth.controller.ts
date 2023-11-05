@@ -14,4 +14,14 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const authController = { signUp };
+const registerAgency = catchAsync(async (req: Request, res: Response) => {
+  const result = await authService.registerAgency(req.body);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Agency registered successfully',
+    data: result,
+  });
+});
+
+export const authController = { signUp, registerAgency };

@@ -29,7 +29,7 @@ model Agency {
   auth         Auth     @relation(fields: [authId], references: [id])
   authId       Int
   name         String
-  contactInfo  String
+  contactNo    String
   profileImg   String
   featured     Boolean  @default(false)
   totalReviews Int      @default(0)
