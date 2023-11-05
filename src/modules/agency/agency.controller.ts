@@ -7,7 +7,7 @@ import {
   agencyControllerMsg,
   upcomingSchedulesFilters,
 } from './agency.constant';
-import { createPlanSchema } from './agency.validation';
+import { createPlanSchema, updatePlanSchema } from './agency.validation';
 import { pagination } from '../../utils/helpers/pagination';
 import pick from '../../utils/helpers/pick';
 
@@ -23,7 +23,6 @@ const createTourPlan = catchAsync(async (req: Request, res: Response) => {
     });
   } else {
     const agencyId = Number(req?.user?.userId);
-    console.log(req.user);
     const result = await agencyService.createTourPlan({
       ...req.body,
       agencyId,
@@ -32,6 +31,33 @@ const createTourPlan = catchAsync(async (req: Request, res: Response) => {
       statusCode: StatusCodes.OK,
       success: true,
       message: agencyControllerMsg.createPlanSuccess,
+      data: result,
+    });
+  }
+});
+
+const updateTourPlan = catchAsync(async (req: Request, res: Response) => {
+  const { error } = await updatePlanSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: agencyControllerMsg.updatePlanSchemaError,
+      data: error.details,
+    });
+  } else {
+    const agencyId = Number(req?.user?.userId);
+    const planId = Number(req.params.id);
+    const result = await agencyService.updateTourPlan(planId, {
+      ...req.body,
+      agencyId,
+    });
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: agencyControllerMsg.updatePlanSuccess,
       data: result,
     });
   }
@@ -53,8 +79,31 @@ const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Upcoming schedules retrieved successfully',
+    message: agencyControllerMsg.upcomingSchedulesSuccess,
     data: result,
   });
 });
-export const agencyController = { createTourPlan, getUpcomingSchedules };
+
+const getAllPlans = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, upcomingSchedulesFilters);
+  const agencyId = Number(req.user?.userId);
+
+  const result = await agencyService.getScheduledPlans(
+    paginationOptions,
+    filter,
+    agencyId
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: agencyControllerMsg.plansSuccess,
+    data: result,
+  });
+});
+export const agencyController = {
+  createTourPlan,
+  getUpcomingSchedules,
+  getAllPlans,
+  updateTourPlan,
+};
