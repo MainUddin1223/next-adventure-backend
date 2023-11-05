@@ -7,5 +7,8 @@ const router = express.Router();
 router
   .route('/create-plan')
   .post(verifyAgency, agencyController.createTourPlan);
+router
+  .route('/upcoming-schedules')
+  .get(verifyAgency, agencyController.getUpcomingSchedules);
 
 export default { agencyRouter: router };

@@ -8,7 +8,7 @@ export interface IPaginationPayload {
 export interface IPaginationValue {
   skip: number;
   take: number;
-  orderBy: unknown;
+  orderBy: any;
   page: number;
 }
 export interface IMeta {
@@ -23,4 +23,9 @@ export interface IApiResponse<T> {
   message?: string | null;
   meta?: IMeta;
   data?: T | null;
+}
+export interface IFilterOption {
+  search?: string | undefined;
+  min_price?: number | undefined;
+  max_price?: number | undefined;
 }
