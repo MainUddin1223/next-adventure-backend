@@ -10,6 +10,7 @@ import {
 import pick from '../../utils/helpers/pick';
 import { StatusCodes } from 'http-status-codes';
 import sendResponse from '../../utils/helpers/sendResponse';
+import { reviewSchema } from './user.validator';
 
 const getAgencies = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = await pagination(req.query);
@@ -58,15 +59,26 @@ const getPlanDetails = catchAsync(async (req: Request, res: Response) => {
 });
 
 const reviewPlatform = catchAsync(async (req: Request, res: Response) => {
-  const userId = Number(req.user?.userId);
-  const data = req.body;
-  const result = await userService.reviewPlatform({ ...data, userId });
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: userControllerMsg.planDetailsSuccess,
-    data: result,
-  });
+  const { error } = await reviewSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: error.details[0]?.message || userControllerMsg.reviewError,
+      data: error.details,
+    });
+  } else {
+    const userId = Number(req.user?.userId);
+    const data = req.body;
+    const result = await userService.reviewPlatform({ ...data, userId });
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: userControllerMsg.reviewSuccess,
+      data: result,
+    });
+  }
 });
 
 export const userController = {

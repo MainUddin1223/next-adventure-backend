@@ -145,7 +145,13 @@ const getTourPlans = async (
     },
   });
 
-  const totalCount = await prisma.user.count();
+  const totalCount = await prisma.plan.count({
+    where: {
+      deadline: {
+        gt: new Date(),
+      },
+    },
+  });
 
   const totalPage = totalCount > take ? totalCount / Number(take) : 1;
   return {

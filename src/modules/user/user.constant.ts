@@ -5,4 +5,6 @@ export const userControllerMsg = {
   plansSuccess: 'Tour Plans retrieved successfully',
   agencyDataSuccess: 'Agency data retrieved successfully',
   planDetailsSuccess: 'Agency data retrieved successfully',
+  reviewSuccess: 'Your feedback submitted successfully',
+  reviewError: 'Failed to submit your feedback',
 };

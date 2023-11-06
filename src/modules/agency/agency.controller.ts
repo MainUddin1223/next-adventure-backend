@@ -18,7 +18,8 @@ const createTourPlan = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       success: false,
-      message: agencyControllerMsg.createPlanSchemaError,
+      message:
+        error.details[0]?.message || agencyControllerMsg.createPlanSchemaError,
       data: error.details,
     });
   } else {
@@ -43,7 +44,8 @@ const updateTourPlan = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       success: false,
-      message: agencyControllerMsg.updatePlanSchemaError,
+      message:
+        error.details[0]?.message || agencyControllerMsg.updatePlanSchemaError,
       data: error.details,
     });
   } else {
