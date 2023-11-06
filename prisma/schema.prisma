@@ -107,7 +107,8 @@ model Bookings {
   user        User          @relation(fields: [userId], references: [id])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  Payouts     Payouts[]
+  payouts     Payouts[]
+  planReviews PlanReviews[]
 
   @@map("bookings")
 }
@@ -123,15 +124,17 @@ model Reviews {
 }
 
 model PlanReviews {
-  id       Int    @id @default(autoincrement())
-  rating   Int
-  feedback String
-  userId   Int
-  agencyId Int
-  planId   Int
-  user     User   @relation(fields: [userId], references: [id])
-  agency   Agency @relation(fields: [agencyId], references: [id])
-  plan     Plan   @relation(fields: [planId], references: [id])
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  feedback  String
+  userId    Int
+  agencyId  Int
+  planId    Int
+  bookingId Int
+  booking   Bookings @relation(fields: [bookingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  agency    Agency   @relation(fields: [agencyId], references: [id])
+  plan      Plan     @relation(fields: [planId], references: [id])
 
   @@map("planReviews")
 }

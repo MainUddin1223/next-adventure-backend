@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
-import { BookPlanPayload, IReviewPlatform } from './user.interface';
+import {
+  BookPlanPayload,
+  IReviewPlan,
+  IReviewPlatform,
+} from './user.interface';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
 import { userServiceMessage } from './user.constant';
@@ -300,6 +304,59 @@ const bookPlan = async (payload: BookPlanPayload) => {
   return result;
 };
 
+const reviewPlan = async (payload: IReviewPlan) => {
+  const { bookingId, feedback, rating, userId } = payload;
+  const alreadyReviewed = await prisma.planReviews.findFirst({
+    where: {
+      bookingId,
+      userId: userId,
+    },
+  });
+  if (alreadyReviewed) {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      userServiceMessage.alreadyReviewedPlan
+    );
+  }
+  const validReview = await prisma.bookings.findUnique({
+    where: {
+      id: bookingId,
+    },
+    select: {
+      id: true,
+      agencyId: true,
+      planId: true,
+      plan: true,
+      status: true,
+    },
+  });
+  if (!validReview) {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      userServiceMessage.invalidPlanReview
+    );
+  }
+  if (validReview.plan.departureTime > new Date()) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      userServiceMessage.yetToExperience
+    );
+  }
+  if (validReview?.status !== 'confirmed') {
+    throw new ApiError(StatusCodes.NOT_FOUND, userServiceMessage.notConfirmed);
+  }
+  const data = {
+    rating,
+    feedback,
+    userId,
+    planId: validReview.plan.id,
+    agencyId: validReview.agencyId,
+    bookingId: validReview.id,
+  };
+  await prisma.planReviews.create({ data });
+  return { message: 'Review submitted successfully' };
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -308,4 +365,5 @@ export const userService = {
   reviewPlatform,
   getLandingPageData,
   bookPlan,
+  reviewPlan,
 };

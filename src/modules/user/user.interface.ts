@@ -9,3 +9,10 @@ export interface BookPlanPayload {
   planId: number;
   seats: number;
 }
+
+export interface IReviewPlan {
+  rating: number;
+  feedback: string;
+  bookingId: number;
+  userId: number;
+}

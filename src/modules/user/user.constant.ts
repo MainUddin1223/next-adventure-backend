@@ -10,9 +10,15 @@ export const userControllerMsg = {
   landingPageSuccess: 'Data fetched successfully',
   bookPlanSuccess: 'Plan booked successfully',
   bookPlanError: 'Failed to book the plan',
+  planReviewSuccess: 'Your review submitted successfully',
+  planReviewError: 'Failed to submit your review',
 };
 
 export const userServiceMessage = {
   invalidPlan: 'Requested plan is expired',
   seatsUnavailable: 'Seats unavailable',
+  alreadyReviewedPlan: 'You have already reviewed the plan',
+  invalidPlanReview: 'You did not book the plan',
+  yetToExperience: 'Plan yet to be experienced',
+  notConfirmed: 'Your booking was not confirmed',
 };

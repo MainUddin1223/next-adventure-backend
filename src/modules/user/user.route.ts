@@ -11,5 +11,6 @@ router.route('/plans/:id').get(verifyAuth, userController.getPlanDetails);
 router.route('/review').post(verifyUser, userController.reviewPlatform);
 router.route('/data').get(userController.getLandingPageData);
 router.route('/book-plan/:id').post(verifyUser, userController.bookPlan);
+router.route('/booking/review/:id').post(verifyUser, userController.reviewPlan);
 
 export default { userRouter: router };

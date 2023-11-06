@@ -115,6 +115,36 @@ const bookPlan = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const reviewPlan = catchAsync(async (req: Request, res: Response) => {
+  const { error } = await reviewSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: error.details[0]?.message || userControllerMsg.planReviewError,
+      data: error.details,
+    });
+  } else {
+    const bookingId = Number(req.params.id);
+    const userId = Number(req.user?.userId);
+    const { rating, feedback } = req.body;
+
+    const result = await userService.reviewPlan({
+      bookingId,
+      userId,
+      rating,
+      feedback,
+    });
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: userControllerMsg.planReviewSuccess,
+      data: result,
+    });
+  }
+});
+
 export const userController = {
   getAgencies,
   getTourPlans,
@@ -123,4 +153,5 @@ export const userController = {
   reviewPlatform,
   getLandingPageData,
   bookPlan,
+  reviewPlan,
 };

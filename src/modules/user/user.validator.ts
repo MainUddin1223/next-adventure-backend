@@ -7,8 +7,8 @@ export const reviewSchema = Joi.object({
     'number.max': 'Rating must be less than or equal to 5',
   }),
   feedback: Joi.string().required().messages({
-    'string.pattern.base': 'Please give valid description',
-    'any.required': 'Description is required',
+    'string.pattern.base': 'Please give valid feedback',
+    'any.required': 'Feedback is required',
   }),
 });
 
