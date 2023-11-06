@@ -25,49 +25,54 @@ model Auth {
 }
 
 model Agency {
-  id           Int      @id @default(autoincrement())
-  auth         Auth     @relation(fields: [authId], references: [id])
+  id           Int           @id @default(autoincrement())
+  auth         Auth          @relation(fields: [authId], references: [id])
   authId       Int
   name         String
   contactNo    String
   profileImg   String
-  featured     Boolean  @default(false)
-  totalReviews Int      @default(0)
-  totalStar    Decimal  @default(0) @db.Decimal(10, 2)
-  rating       Decimal  @default(0) @db.Decimal(10, 2)
+  featured     Boolean       @default(false)
+  totalReviews Int           @default(0)
+  totalStar    Decimal       @default(0) @db.Decimal(10, 2)
+  rating       Decimal       @default(0) @db.Decimal(10, 2)
   location     String
   about        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   plans        Plan[]
+  bookings     Bookings[]
+  planReviews  PlanReviews[]
+  Payouts      Payouts[]
 
   @@map("agencies")
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  auth       Auth      @relation(fields: [authId], references: [id])
-  authId     Int
-  profileImg String?
-  name       String?
-  contactNo  String?
-  about      String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  reviews    Reviews[]
+  id          Int           @id @default(autoincrement())
+  auth        Auth          @relation(fields: [authId], references: [id])
+  authId      Int
+  profileImg  String?
+  name        String?
+  contactNo   String?
+  about       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  reviews     Reviews[]
+  bookings    Bookings[]
+  planReviews PlanReviews[]
 
   @@map("users")
 }
 
 model Plan {
-  id             Int        @id @default(autoincrement())
-  agency         Agency     @relation(fields: [agencyId], references: [id])
+  id             Int           @id @default(autoincrement())
+  agency         Agency        @relation(fields: [agencyId], references: [id])
   agencyId       Int
   planName       String
   destination    String
   departureFrom  String
   coverLocations String[]
-  price          Decimal    @db.Decimal(10, 2)
+  price          Decimal       @db.Decimal(10, 2)
   images         String[]
   duration       String
   description    String
@@ -76,12 +81,35 @@ model Plan {
   events         String[]
   notAllowed     String[]
   deadline       DateTime
-  featured       Boolean    @default(false)
-  status         PlanStatus @default(available)
+  featured       Boolean       @default(false)
+  status         PlanStatus    @default(available)
   totalSeats     Int
-  totalBooking   Int        @default(0)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  totalBooking   Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  bookings       Bookings[]
+  planReviews    PlanReviews[]
+  Payouts        Payouts[]
+
+  @@map("plan")
+}
+
+model Bookings {
+  id          Int           @id @default(autoincrement())
+  status      BookingStatus @default(pending)
+  seats       Int
+  totalAmount Decimal       @db.Decimal(10, 2)
+  userId      Int
+  agencyId    Int
+  planId      Int
+  agency      Agency        @relation(fields: [agencyId], references: [id])
+  plan        Plan          @relation(fields: [planId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Payouts     Payouts[]
+
+  @@map("bookings")
 }
 
 model Reviews {
@@ -90,6 +118,50 @@ model Reviews {
   feedback String
   userId   Int
   user     User   @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
+model PlanReviews {
+  id       Int    @id @default(autoincrement())
+  rating   Int
+  feedback String
+  userId   Int
+  agencyId Int
+  planId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  agency   Agency @relation(fields: [agencyId], references: [id])
+  plan     Plan   @relation(fields: [planId], references: [id])
+
+  @@map("planReviews")
+}
+
+model Payouts {
+  id        Int          @id @default(autoincrement())
+  status    PayoutStatus @default(pending)
+  agencyId  Int
+  planId    Int
+  bookingId Int
+  agency    Agency       @relation(fields: [agencyId], references: [id])
+  plan      Plan         @relation(fields: [planId], references: [id])
+  booking   Bookings     @relation(fields: [bookingId], references: [id])
+
+  @@map("payouts")
+}
+
+// enums
+
+enum PayoutStatus {
+  pending
+  released
+  postponded
+}
+
+enum BookingStatus {
+  canceled
+  confirmed
+  pending
+  rejected
 }
 
 enum Role {
