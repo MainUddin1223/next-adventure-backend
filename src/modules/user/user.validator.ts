@@ -11,3 +11,10 @@ export const reviewSchema = Joi.object({
     'any.required': 'Description is required',
   }),
 });
+
+export const bookPlanSchema = Joi.object({
+  totalSeat: Joi.number().required().messages({
+    'number.base': 'Please enter a valid seat amount',
+    'number.required': 'Seat amount is required',
+  }),
+});

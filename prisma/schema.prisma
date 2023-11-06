@@ -137,14 +137,15 @@ model PlanReviews {
 }
 
 model Payouts {
-  id        Int          @id @default(autoincrement())
-  status    PayoutStatus @default(pending)
-  agencyId  Int
-  planId    Int
-  bookingId Int
-  agency    Agency       @relation(fields: [agencyId], references: [id])
-  plan      Plan         @relation(fields: [planId], references: [id])
-  booking   Bookings     @relation(fields: [bookingId], references: [id])
+  id          Int          @id @default(autoincrement())
+  status      PayoutStatus @default(pending)
+  agencyId    Int
+  planId      Int
+  bookingId   Int
+  totalAmount Decimal      @db.Decimal(10, 2)
+  agency      Agency       @relation(fields: [agencyId], references: [id])
+  plan        Plan         @relation(fields: [planId], references: [id])
+  booking     Bookings     @relation(fields: [bookingId], references: [id])
 
   @@map("payouts")
 }

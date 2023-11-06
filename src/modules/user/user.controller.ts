@@ -10,7 +10,7 @@ import {
 import pick from '../../utils/helpers/pick';
 import { StatusCodes } from 'http-status-codes';
 import sendResponse from '../../utils/helpers/sendResponse';
-import { reviewSchema } from './user.validator';
+import { bookPlanSchema, reviewSchema } from './user.validator';
 
 const getAgencies = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = await pagination(req.query);
@@ -91,6 +91,30 @@ const getLandingPageData = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const bookPlan = catchAsync(async (req: Request, res: Response) => {
+  const { error } = await bookPlanSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: error.details[0]?.message || userControllerMsg.bookPlanError,
+      data: error.details,
+    });
+  } else {
+    const planId = Number(req.params.id);
+    const userId = Number(req.user?.userId);
+    const seats = Number(req.body.totalSeat);
+    const result = await userService.bookPlan({ planId, userId, seats });
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: userControllerMsg.bookPlanSuccess,
+      data: result,
+    });
+  }
+});
+
 export const userController = {
   getAgencies,
   getTourPlans,
@@ -98,4 +122,5 @@ export const userController = {
   getPlanDetails,
   reviewPlatform,
   getLandingPageData,
+  bookPlan,
 };

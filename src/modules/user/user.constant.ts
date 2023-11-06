@@ -8,4 +8,11 @@ export const userControllerMsg = {
   reviewSuccess: 'Your feedback submitted successfully',
   reviewError: 'Failed to submit your feedback',
   landingPageSuccess: 'Data fetched successfully',
+  bookPlanSuccess: 'Plan booked successfully',
+  bookPlanError: 'Failed to book the plan',
+};
+
+export const userServiceMessage = {
+  invalidPlan: 'Requested plan is expired',
+  seatsUnavailable: 'Seats unavailable',
 };

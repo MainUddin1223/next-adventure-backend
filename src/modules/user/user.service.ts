@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
-import { IReviewPlatform } from './user.interface';
+import { BookPlanPayload, IReviewPlatform } from './user.interface';
+import ApiError from '../../utils/errorHandlers/apiError';
+import { StatusCodes } from 'http-status-codes';
+import { userServiceMessage } from './user.constant';
 
 const prisma = new PrismaClient();
 
@@ -243,6 +246,60 @@ const getLandingPageData = async () => {
   return { plans, agencies, reviews };
 };
 
+const bookPlan = async (payload: BookPlanPayload) => {
+  const { userId, planId, seats } = payload;
+  const isValidPlan = await prisma.plan.findUnique({
+    where: {
+      id: planId,
+      deadline: {
+        gt: new Date(),
+      },
+    },
+  });
+  if (!isValidPlan) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      userServiceMessage.invalidPlan
+    );
+  }
+  const totalBooking = isValidPlan.totalBooking + Number(seats);
+  if (totalBooking > isValidPlan.totalSeats) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      userServiceMessage.seatsUnavailable
+    );
+  }
+  const totalAmount = (Number(isValidPlan.price) * seats).toFixed(2);
+  const bookingData = {
+    seats,
+    totalAmount,
+    userId,
+    agencyId: isValidPlan.agencyId,
+    planId,
+  };
+  const result = await prisma.$transaction(async prisma => {
+    const booking = await prisma.bookings.create({ data: bookingData });
+    await prisma.payouts.create({
+      data: {
+        agencyId: isValidPlan.agencyId,
+        planId,
+        bookingId: booking.id,
+        totalAmount,
+      },
+    });
+    await prisma.plan.update({
+      where: {
+        id: planId,
+      },
+      data: {
+        totalBooking,
+      },
+    });
+    return { totalAmount, totalBooking: seats, planName: isValidPlan.planName };
+  });
+  return result;
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -250,4 +307,5 @@ export const userService = {
   getTourPlanById,
   reviewPlatform,
   getLandingPageData,
+  bookPlan,
 };

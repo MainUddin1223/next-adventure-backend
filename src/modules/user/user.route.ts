@@ -10,5 +10,6 @@ router.route('/agencies/:id').get(verifyAuth, userController.getAgencyById);
 router.route('/plans/:id').get(verifyAuth, userController.getPlanDetails);
 router.route('/review').post(verifyUser, userController.reviewPlatform);
 router.route('/data').get(userController.getLandingPageData);
+router.route('/book-plan/:id').post(verifyUser, userController.bookPlan);
 
 export default { userRouter: router };
