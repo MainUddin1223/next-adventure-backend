@@ -9,5 +9,6 @@ router.route('/plans').get(userController.getTourPlans);
 router.route('/agencies/:id').get(verifyAuth, userController.getAgencyById);
 router.route('/plans/:id').get(verifyAuth, userController.getPlanDetails);
 router.route('/review').post(verifyUser, userController.reviewPlatform);
+router.route('/data').get(userController.getLandingPageData);
 
 export default { userRouter: router };

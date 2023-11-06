@@ -81,10 +81,21 @@ const reviewPlatform = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const getLandingPageData = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getLandingPageData();
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: userControllerMsg.landingPageSuccess,
+    data: result,
+  });
+});
+
 export const userController = {
   getAgencies,
   getTourPlans,
   getAgencyById,
   getPlanDetails,
   reviewPlatform,
+  getLandingPageData,
 };

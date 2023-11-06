@@ -229,10 +229,25 @@ const reviewPlatform = async (data: IReviewPlatform) => {
   return result;
 };
 
+const getLandingPageData = async () => {
+  const plans = await prisma.plan.findMany({
+    take: 6,
+    where: {
+      deadline: {
+        gt: new Date(),
+      },
+    },
+  });
+  const agencies = await prisma.agency.findMany({ take: 6 });
+  const reviews = await prisma.reviews.findMany();
+  return { plans, agencies, reviews };
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
   getAgencyById,
   getTourPlanById,
   reviewPlatform,
+  getLandingPageData,
 };

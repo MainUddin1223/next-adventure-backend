@@ -7,4 +7,5 @@ export const userControllerMsg = {
   planDetailsSuccess: 'Agency data retrieved successfully',
   reviewSuccess: 'Your feedback submitted successfully',
   reviewError: 'Failed to submit your feedback',
+  landingPageSuccess: 'Data fetched successfully',
 };
