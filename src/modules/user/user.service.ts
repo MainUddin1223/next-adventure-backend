@@ -406,15 +406,19 @@ const getAllBookings = async (
     if (search) {
       queryOption['OR'] = [
         {
-          name: {
-            contains: search,
-            mode: 'insensitive',
+          plan: {
+            planName: {
+              contains: search,
+              mode: 'insensitive',
+            },
           },
         },
         {
-          location: {
-            contains: search,
-            mode: 'insensitive',
+          plan: {
+            destination: {
+              contains: search,
+              mode: 'insensitive',
+            },
           },
         },
       ];
@@ -430,6 +434,7 @@ const getAllBookings = async (
     orderBy,
     where: {
       userId,
+      ...queryOption,
     },
     select: {
       id: true,

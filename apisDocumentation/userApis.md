@@ -200,3 +200,114 @@ Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI
     }
 }
 ```
+
+### Get upcoming schedules
+
+This api will fetch all upcoming schedules
+
+```
+localhost:8000/api/v1/user//upcoming-schedule
+```
+
+#### header
+
+```
+Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI6Miwicn9sZSI6InVzZXIiLCJpYXQiOjE1OTkxNzczNzcsImV4cCI6MTcwMTc2OTM3N30.eZ91XPJ8UC70ew1gTFDXS2sMnjfYTuiXAhMtxBMIxhy
+```
+
+#### response
+
+```
+{
+    "statusCode": 200,
+    "success": true,
+    "message": "Plan booked successfully",
+    "data": [
+        {
+            "id": 3,
+            "totalAmount": "25000",
+            "seats": 5,
+            "status": "pending",
+            "plan": {
+                "departureTime": "2023-11-30T12:00:00.000Z",
+                "departureFrom": "Dhaka",
+                "planName": "Lets go Kuakata",
+                "destination": "Mirshari"
+            },
+            "agency": {
+                "name": "agency",
+                "contactNo": "+8951514842",
+                "profileImg": "img.jpg"
+            }
+        }
+    ]
+}
+```
+
+### Get Booking history
+
+This api will fetch all bookings
+
+```
+localhost:8000/api/v1/user/bookings?page=1&limit=10&search=Lets explore sajek
+```
+
+#### header
+
+```
+Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI6Miwicn9sZSI6InVzZXIiLCJpYXQiOjE1OTkxNzczNzcsImV4cCI6MTcwMTc2OTM3N30.eZ91XPJ8UC70ew1gTFDXS2sMnjfYTuiXAhMtxBMIxhy
+```
+
+#### response
+
+```
+{
+    "statusCode": 200,
+    "success": true,
+    "message": "Plan booked successfully",
+    "data": {
+        "result": [
+            {
+                "id": 2,
+                "totalAmount": "25000",
+                "seats": 5,
+                "status": "confirmed",
+                "plan": {
+                    "departureTime": "2023-11-02T12:00:00.000Z",
+                    "departureFrom": "Dhaka",
+                    "planName": "Lets explore sajek",
+                    "destination": "Mirshari"
+                },
+                "agency": {
+                    "name": "agency",
+                    "contactNo": "+8951514842",
+                    "profileImg": "img.jpg"
+                }
+            },
+            {
+                "id": 1,
+                "totalAmount": "25000",
+                "seats": 5,
+                "status": "confirmed",
+                "plan": {
+                    "departureTime": "2023-11-02T12:00:00.000Z",
+                    "departureFrom": "Dhaka",
+                    "planName": "Lets explore sajek",
+                    "destination": "Mirshari"
+                },
+                "agency": {
+                    "name": "agency",
+                    "contactNo": "+8951514842",
+                    "profileImg": "img.jpg"
+                }
+            }
+        ],
+        "meta": {
+            "page": 1,
+            "size": 10,
+            "total": 3,
+            "totalPage": 1
+        }
+    }
+}
+```
