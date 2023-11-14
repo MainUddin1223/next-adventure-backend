@@ -156,6 +156,23 @@ const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllBookings = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = await pagination(req.query);
+  const filter = pick(req.query, agenciesSearchOptions);
+  const userId = Number(req.user?.userId);
+  const result = await userService.getAllBookings(
+    userId,
+    paginationOptions,
+    filter
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: userControllerMsg.bookPlanSuccess,
+    data: result,
+  });
+});
+
 export const userController = {
   getAgencies,
   getTourPlans,
@@ -166,4 +183,5 @@ export const userController = {
   bookPlan,
   reviewPlan,
   getUpcomingSchedules,
+  getAllBookings,
 };

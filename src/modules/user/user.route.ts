@@ -18,4 +18,6 @@ router
   .route('/upcoming-schedule')
   .get(verifyUser, userController.getUpcomingSchedules);
 
+router.route('/bookings').get(verifyUser, userController.getAllBookings);
+
 export default { userRouter: router };

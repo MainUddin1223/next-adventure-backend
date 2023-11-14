@@ -392,6 +392,76 @@ const getUpcomingSchedules = async (userId: number) => {
   return result;
 };
 
+const getAllBookings = async (
+  userId: number,
+  meta: IPaginationValue,
+  filterOptions: IFilterOption
+) => {
+  const { skip, take, orderBy, page } = meta;
+  const queryOption: { [key: string]: any } = {};
+
+  if (Object.keys(filterOptions).length) {
+    const { search, ...restOptions } = filterOptions;
+
+    if (search) {
+      queryOption['OR'] = [
+        {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          location: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+    Object.entries(restOptions).forEach(([field, value]) => {
+      queryOption[field] = value;
+    });
+  }
+
+  const result = await prisma.bookings.findMany({
+    skip,
+    take,
+    orderBy,
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+      totalAmount: true,
+      seats: true,
+      status: true,
+      plan: {
+        select: {
+          departureTime: true,
+          departureFrom: true,
+          planName: true,
+          destination: true,
+        },
+      },
+      agency: {
+        select: {
+          name: true,
+          contactNo: true,
+          profileImg: true,
+        },
+      },
+    },
+  });
+  const totalCount = await prisma.bookings.count({ where: { userId } });
+
+  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  return {
+    result,
+    meta: { page: page, size: take, total: totalCount, totalPage },
+  };
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -402,4 +472,5 @@ export const userService = {
   bookPlan,
   reviewPlan,
   getUpcomingSchedules,
+  getAllBookings,
 };
