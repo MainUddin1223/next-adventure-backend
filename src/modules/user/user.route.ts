@@ -19,5 +19,8 @@ router
   .get(verifyUser, userController.getUpcomingSchedules);
 
 router.route('/bookings').get(verifyUser, userController.getAllBookings);
+router
+  .route('/manage-Schedule/:id')
+  .patch(verifyUser, userController.manageSchedule);
 
 export default { userRouter: router };

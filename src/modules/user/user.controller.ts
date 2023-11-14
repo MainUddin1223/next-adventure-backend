@@ -169,6 +169,19 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: userControllerMsg.bookPlanSuccess,
+    data: result.result,
+    meta: result.meta,
+  });
+});
+const manageSchedule = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const status = req.query.status as 'canceled' | 'requested';
+  const userId = Number(req.user?.userId);
+  const result = await userService.manageSchedule(id, userId, status);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: userControllerMsg.bookPlanSuccess,
     data: result,
   });
 });
@@ -184,4 +197,5 @@ export const userController = {
   reviewPlan,
   getUpcomingSchedules,
   getAllBookings,
+  manageSchedule,
 };

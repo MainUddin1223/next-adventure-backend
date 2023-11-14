@@ -246,7 +246,7 @@ Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI
 
 ### Get Booking history
 
-This api will fetch all bookings
+This api will fetch all bookings history
 
 ```
 localhost:8000/api/v1/user/bookings?page=1&limit=10&search=Lets explore sajek
@@ -308,6 +308,42 @@ Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI
             "total": 3,
             "totalPage": 1
         }
+    }
+}
+```
+
+### review a plan
+
+This api allows to submit a review against a plan
+
+```
+localhost:8000/api/v1/user/booking/review/1
+```
+
+#### header
+
+```
+Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI6Miwicn9sZSI6InVzZXIiLCJpYXQiOjE1OTkxNzczNzcsImV4cCI6MTcwMTc2OTM3N30.eZ91XPJ8UC70ew1gTFDXS2sMnjfYTuiXAhMtxBMIxhy
+```
+
+#### body
+
+```
+{
+    "rating":5,
+    "feedback":"It was one of the best tour in my lify. Planner was super friendly and helpful"
+}
+```
+
+#### response
+
+```
+{
+    "statusCode": 200,
+    "success": true,
+    "message": "Your review submitted successfully",
+    "data": {
+        "message": "Review submitted successfully"
     }
 }
 ```

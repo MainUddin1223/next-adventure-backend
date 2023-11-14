@@ -467,6 +467,54 @@ const getAllBookings = async (
   };
 };
 
+const manageSchedule = async (
+  id: number,
+  userId: number,
+  status: 'canceled' | 'requested'
+) => {
+  const getSchedule = await prisma.bookings.findUnique({
+    where: {
+      id,
+      userId,
+      plan: {
+        deadline: {
+          gt: new Date(),
+        },
+      },
+    },
+  });
+  if (!getSchedule) {
+    throw new ApiError(500, 'Invalid schedule');
+  }
+  let result;
+  if (getSchedule.status === 'canceled' && status === 'requested') {
+    result = await prisma.bookings.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
+    });
+  }
+  if (
+    getSchedule.status === 'confirmed' ||
+    (getSchedule.status === 'pending' && status === 'canceled')
+  ) {
+    result = await prisma.bookings.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
+    });
+  } else {
+    throw new ApiError(500, 'Invalid status');
+  }
+  return result;
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -478,4 +526,5 @@ export const userService = {
   reviewPlan,
   getUpcomingSchedules,
   getAllBookings,
+  manageSchedule,
 };
