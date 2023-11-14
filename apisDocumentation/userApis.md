@@ -347,3 +347,38 @@ Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI
     }
 }
 ```
+
+### manage schedule
+
+This api will help users to manage their upcoming schedules
+
+```
+localhost:8000/api/v1/user/manage-Schedule/3?status=canceled
+```
+
+#### header
+
+```
+Authorization = eyJhbGciOiJIUzI1NiIsjnR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImF1dGhJZCI6Miwicn9sZSI6InVzZXIiLCJpYXQiOjE1OTkxNzczNzcsImV4cCI6MTcwMTc2OTM3N30.eZ91XPJ8UC70ew1gTFDXS2sMnjfYTuiXAhMtxBMIxhy
+```
+
+#### response
+
+```
+{
+    "statusCode": 200,
+    "success": true,
+    "message": "Booking status updated successfully",
+    "data": {
+        "id": 3,
+        "status": "canceled",
+        "seats": 5,
+        "totalAmount": "25000",
+        "userId": 1,
+        "agencyId": 2,
+        "planId": 4,
+        "createdAt": "2023-11-13T14:23:04.774Z",
+        "updatedAt": "2023-11-14T13:27:41.857Z"
+    }
+}
+```
