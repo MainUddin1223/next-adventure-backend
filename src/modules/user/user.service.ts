@@ -357,6 +357,41 @@ const reviewPlan = async (payload: IReviewPlan) => {
   return { message: 'Review submitted successfully' };
 };
 
+const getUpcomingSchedules = async (userId: number) => {
+  const result = await prisma.bookings.findMany({
+    where: {
+      userId,
+      plan: {
+        departureTime: {
+          gt: new Date(),
+        },
+      },
+    },
+    select: {
+      id: true,
+      totalAmount: true,
+      seats: true,
+      status: true,
+      plan: {
+        select: {
+          departureTime: true,
+          departureFrom: true,
+          planName: true,
+          destination: true,
+        },
+      },
+      agency: {
+        select: {
+          name: true,
+          contactNo: true,
+          profileImg: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -366,4 +401,5 @@ export const userService = {
   getLandingPageData,
   bookPlan,
   reviewPlan,
+  getUpcomingSchedules,
 };

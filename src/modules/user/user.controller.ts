@@ -145,6 +145,17 @@ const reviewPlan = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
+  const userId = Number(req.user?.userId);
+  const result = await userService.getUpcomingSchedules(userId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: userControllerMsg.bookPlanSuccess,
+    data: result,
+  });
+});
+
 export const userController = {
   getAgencies,
   getTourPlans,
@@ -154,4 +165,5 @@ export const userController = {
   getLandingPageData,
   bookPlan,
   reviewPlan,
+  getUpcomingSchedules,
 };
