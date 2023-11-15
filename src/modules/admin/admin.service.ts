@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
+import ApiError from '../../utils/errorHandlers/apiError';
+import { StatusCodes } from 'http-status-codes';
 
 const prisma = new PrismaClient();
 
@@ -439,6 +441,44 @@ const getBookingById = async (id: number) => {
   return result;
 };
 
+const manageSchedule = async (id: number, status: 'pending' | 'postponded') => {
+  const getBooking = await prisma.bookings.findUnique({
+    where: { id },
+    include: {
+      plan: true,
+    },
+  });
+  if (!getBooking) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Booking not found');
+  }
+  if (getBooking.plan.deadline < new Date()) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Booking Deadline is over');
+  }
+  if (getBooking.status === 'canceled') {
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'User already canceled the booking'
+    );
+  }
+  if (getBooking.status === 'pending' && status == 'pending') {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'Booking status already in pending'
+    );
+  }
+  if (getBooking.status !== 'postponded' && status == 'pending') {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'You can not change the status into pending'
+    );
+  }
+  const result = await prisma.bookings.update({
+    where: { id },
+    data: { status },
+  });
+  return result;
+};
+
 export const adminService = {
   getUsersOrAdmins,
   getAgencies,
@@ -448,4 +488,5 @@ export const adminService = {
   getPlanDetailsById,
   getBookings,
   getBookingById,
+  manageSchedule,
 };

@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { pagination } from '../../utils/helpers/pagination';
 import { AdminControllerMsg, getUsersFilterOptions } from './admin.constant';
 import pick from '../../utils/helpers/pick';
+import ApiError from '../../utils/errorHandlers/apiError';
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pagination(req.query);
@@ -132,6 +133,22 @@ const getBookingById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const manageSchedule = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const status = req.query.status;
+  if (status == 'pending' || status === 'postponded') {
+    const result = await adminService.manageSchedule(id, status);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: AdminControllerMsg.manageBookingSuccess,
+      data: result,
+    });
+  } else {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid status');
+  }
+});
+
 export const AdminController = {
   getUsers,
   getAdmins,
@@ -142,4 +159,5 @@ export const AdminController = {
   getPlanDetailsById,
   getBookings,
   getBookingById,
+  manageSchedule,
 };
