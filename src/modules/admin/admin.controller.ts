@@ -41,4 +41,17 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AdminController = { getUsers, getAdmins };
+const getAgencies = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, getUsersFilterOptions);
+  const result = await adminService.getAgencies(paginationOptions, filter);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.getAgenciesSuccess,
+    data: result,
+  });
+});
+
+export const AdminController = { getUsers, getAdmins, getAgencies };

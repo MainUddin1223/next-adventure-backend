@@ -12,6 +12,9 @@ export const userControllerMsg = {
   bookPlanError: 'Failed to book the plan',
   planReviewSuccess: 'Your review submitted successfully',
   planReviewError: 'Failed to submit your review',
+  upcomingSchedulesSuccess: 'Upcoming schedules fetched successfully',
+  bookingsSuccess: 'Bookings data retrieved successfully',
+  scheduleUpdateSuccess: 'Schedule updated successfully',
 };
 
 export const userServiceMessage = {

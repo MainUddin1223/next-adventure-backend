@@ -151,7 +151,7 @@ const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: userControllerMsg.bookPlanSuccess,
+    message: userControllerMsg.upcomingSchedulesSuccess,
     data: result,
   });
 });
@@ -168,7 +168,7 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: userControllerMsg.bookPlanSuccess,
+    message: userControllerMsg.bookingsSuccess,
     data: result.result,
     meta: result.meta,
   });
@@ -181,7 +181,7 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: userControllerMsg.bookPlanSuccess,
+    message: userControllerMsg.scheduleUpdateSuccess,
     data: result,
   });
 });

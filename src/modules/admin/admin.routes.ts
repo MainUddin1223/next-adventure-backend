@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.route('/users').get(verifyAdmin, AdminController.getUsers);
 router.route('/admins').get(verifyAdmin, AdminController.getAdmins);
+router.route('/agencies').get(verifyAdmin, AdminController.getAgencies);
 
 export default { adminRouter: router };
