@@ -161,7 +161,7 @@ const manageSchedule = async (
     },
   });
   if (!getSchedule) {
-    throw new ApiError(500, 'Invalid schedule');
+    throw new ApiError(500, agencyServiceMsg.deadlineExpireScheduleError);
   }
 
   let result;
@@ -175,7 +175,7 @@ const manageSchedule = async (
       },
     });
   } else {
-    throw new ApiError(500, 'Invalid status');
+    throw new ApiError(500, agencyServiceMsg.invalidStatusError);
   }
   return result;
 };

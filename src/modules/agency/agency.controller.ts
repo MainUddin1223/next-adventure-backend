@@ -64,6 +64,7 @@ const updateTourPlan = catchAsync(async (req: Request, res: Response) => {
     });
   }
 });
+
 const getPlanDetails = catchAsync(async (req: Request, res: Response) => {
   const agencyId = Number(req?.user?.userId);
   const planId = Number(req.params.id);
@@ -124,7 +125,7 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: '',
+    message: agencyControllerMsg.manageScheduleSuccess,
     data: result,
   });
 });
@@ -135,7 +136,7 @@ const agencyStatics = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: '',
+    message: agencyControllerMsg.staticsSuccess,
     data: result,
   });
 });
