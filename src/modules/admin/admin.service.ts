@@ -199,11 +199,9 @@ const upcomingSchedules = async (
         },
         {
           agency: {
-            some: {
-              name: {
-                contains: search,
-                mode: 'insensitive',
-              },
+            name: {
+              contains: search,
+              mode: 'insensitive',
             },
           },
         },
@@ -270,6 +268,12 @@ const getAllPlans = async (
           },
         },
         {
+          destination: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
           agency: {
             name: {
               contains: search,
@@ -307,7 +311,7 @@ const getAllPlans = async (
       },
     },
   });
-  const totalCount = await prisma.bookings.count();
+  const totalCount = await prisma.plan.count();
   const totalPage = totalCount > take ? totalCount / Number(take) : 1;
   return {
     result,

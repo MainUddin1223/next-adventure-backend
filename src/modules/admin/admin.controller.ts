@@ -66,9 +66,40 @@ const getAgencyDetailsById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getUpcomingSchedules = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, getUsersFilterOptions);
+  const result = await adminService.upcomingSchedules(
+    paginationOptions,
+    filter
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.upcomingSchedulesSuccess,
+    data: result,
+  });
+});
+
+const getAllPlans = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, getUsersFilterOptions);
+  const result = await adminService.getAllPlans(paginationOptions, filter);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.allPlansSuccess,
+    data: result,
+  });
+});
+
 export const AdminController = {
   getUsers,
   getAdmins,
   getAgencies,
   getAgencyDetailsById,
+  getUpcomingSchedules,
+  getAllPlans,
 };

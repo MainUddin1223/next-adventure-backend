@@ -8,6 +8,10 @@ router.route('/users').get(verifyAdmin, AdminController.getUsers);
 router.route('/admins').get(verifyAdmin, AdminController.getAdmins);
 router.route('/agencies').get(verifyAdmin, AdminController.getAgencies);
 router
+  .route('/schedules')
+  .get(verifyAdmin, AdminController.getUpcomingSchedules);
+router.route('/plans').get(verifyAdmin, AdminController.getAllPlans);
+router
   .route('/agencies/:id')
   .get(verifyAdmin, AdminController.getAgencyDetailsById);
 
