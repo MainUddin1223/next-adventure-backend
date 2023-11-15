@@ -397,6 +397,48 @@ const getBookings = async (
   };
 };
 
+const getBookingById = async (id: number) => {
+  const result = await prisma.bookings.findUnique({
+    where: { id },
+    include: {
+      user: {
+        select: {
+          name: true,
+          profileImg: true,
+          contactNo: true,
+          auth: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+      agency: {
+        select: {
+          name: true,
+          contactNo: true,
+          profileImg: true,
+        },
+      },
+      plan: {
+        select: {
+          planName: true,
+          deadline: true,
+          destination: true,
+          price: true,
+        },
+      },
+      payouts: {
+        select: {
+          status: true,
+          totalAmount: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
 export const adminService = {
   getUsersOrAdmins,
   getAgencies,
@@ -405,4 +447,5 @@ export const adminService = {
   getAgencyDetailsById,
   getPlanDetailsById,
   getBookings,
+  getBookingById,
 };

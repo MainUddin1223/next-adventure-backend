@@ -12,6 +12,7 @@ router
   .get(verifyAdmin, AdminController.getUpcomingSchedules);
 router.route('/plans').get(verifyAdmin, AdminController.getAllPlans);
 router.route('/bookings').get(verifyAdmin, AdminController.getBookings);
+router.route('/bookings/:id').get(verifyAdmin, AdminController.getBookingById);
 router.route('/plans/:id').get(verifyAdmin, AdminController.getPlanDetailsById);
 router
   .route('/agencies/:id')

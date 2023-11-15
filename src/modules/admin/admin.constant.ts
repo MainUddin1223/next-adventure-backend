@@ -9,4 +9,5 @@ export const AdminControllerMsg = {
   bookingsSuccess: 'Bookings retrieved successfully',
   agencyDetailsSuccess: 'Agency details retrieved successfully',
   planDetailsSuccess: 'Plan details retrieved successfully',
+  bookingDetailsSuccess: 'Booking details retrieved successfully',
 };
