@@ -16,4 +16,8 @@ router
   .patch(verifyAgency, agencyController.updateTourPlan)
   .get(verifyAgency, agencyController.getPlanDetails);
 
+router
+  .route('manage-booking/:id')
+  .patch(verifyAgency, agencyController.manageSchedule);
+
 export default { agencyRouter: router };

@@ -115,10 +115,25 @@ const getAllPlans = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const manageSchedule = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const status = req.query.status as 'confirmed' | 'rejected';
+  const agencyId = Number(req.user?.userId);
+  const result = await agencyService.manageSchedule(id, agencyId, status);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: '',
+    data: result,
+  });
+});
+
 export const agencyController = {
   createTourPlan,
   getUpcomingSchedules,
   getAllPlans,
   updateTourPlan,
   getPlanDetails,
+  manageSchedule,
 };
