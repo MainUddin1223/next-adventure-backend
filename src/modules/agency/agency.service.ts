@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { IPlanData } from './agency.interface';
+import { IPayouts, IPlanData } from './agency.interface';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
@@ -180,32 +180,30 @@ const manageSchedule = async (
   return result;
 };
 
-export interface IPayouts {
-  status: 'pending' | 'rejected' | 'released';
-  totalAmount: number;
-  departureTime: Date;
-}
-
 const agencyStatics = async (agencyId: number) => {
   const date = new Date();
   const payouts: IPayouts[] = await prisma.$queryRaw`
-    SELECT po.status,po."totalAmount", pl."departureTime" 
+    SELECT po.status,po."totalAmount", pl."departureTime",b.status as booking_status 
     FROM payouts as po 
     INNER JOIN "plan" as pl ON po."planId" = pl.id
+    INNER JOIN bookings as b ON po."bookingId" = b.id
     WHERE po."agencyId" = ${agencyId}
    `;
-  const result = await payouts.reduce(
-    (acc: any, current: any) => {
-      const { status, totalAmount, departureTime } = current;
+  const result = payouts.reduce(
+    (acc, current: IPayouts) => {
+      const { status, totalAmount, departureTime, booking_status } = current;
 
-      // Initialize status with 0 if it doesn't exist
       if (!acc[status]) {
         acc[status] = 0;
       }
-      if (status == 'pending' && departureTime > date) {
-        acc['upcoming'] += Number(totalAmount);
+      if (booking_status == 'confirmed') {
+        if (status == 'pending' && departureTime > date) {
+          acc['upcoming'] += Number(totalAmount);
+        } else {
+          acc[status] += Number(totalAmount);
+        }
       } else {
-        acc[status] += Number(totalAmount);
+        acc['canceled'] += Number(totalAmount);
       }
 
       return acc;
@@ -213,8 +211,8 @@ const agencyStatics = async (agencyId: number) => {
     {
       pending: 0,
       released: 0,
-      postponed: 0,
       upcoming: 0,
+      canceled: 0,
     }
   );
   return result;

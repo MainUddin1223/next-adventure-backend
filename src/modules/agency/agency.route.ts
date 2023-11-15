@@ -17,7 +17,9 @@ router
   .get(verifyAgency, agencyController.getPlanDetails);
 
 router
-  .route('manage-booking/:id')
+  .route('/manage-booking/:id')
   .patch(verifyAgency, agencyController.manageSchedule);
+
+router.route('/statics').get(verifyAgency, agencyController.agencyStatics);
 
 export default { agencyRouter: router };

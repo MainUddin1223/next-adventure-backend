@@ -15,3 +15,15 @@ export interface IPlanData {
   deadline: Date;
   totalSeats: number;
 }
+export interface IPayouts {
+  status: 'pending' | 'canceled' | 'released' | 'upcoming';
+  totalAmount: number;
+  departureTime: Date;
+  booking_status:
+    | 'canceled'
+    | 'confirmed'
+    | 'pending'
+    | 'rejected'
+    | 'requested'
+    | 'postponed';
+}

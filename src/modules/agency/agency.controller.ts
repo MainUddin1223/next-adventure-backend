@@ -129,6 +129,17 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const agencyStatics = catchAsync(async (req: Request, res: Response) => {
+  const agencyId = Number(req.user?.userId);
+  const result = await agencyService.agencyStatics(agencyId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: '',
+    data: result,
+  });
+});
+
 export const agencyController = {
   createTourPlan,
   getUpcomingSchedules,
@@ -136,4 +147,5 @@ export const agencyController = {
   updateTourPlan,
   getPlanDetails,
   manageSchedule,
+  agencyStatics,
 };
