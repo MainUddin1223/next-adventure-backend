@@ -95,6 +95,18 @@ const getAllPlans = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPlanDetailsById = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const result = await adminService.getPlanDetailsById(id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.planDetailsSuccess,
+    data: result,
+  });
+});
+
 export const AdminController = {
   getUsers,
   getAdmins,
@@ -102,4 +114,5 @@ export const AdminController = {
   getAgencyDetailsById,
   getUpcomingSchedules,
   getAllPlans,
+  getPlanDetailsById,
 };

@@ -7,4 +7,5 @@ export const AdminControllerMsg = {
   upcomingSchedulesSuccess: 'Upcoming schedules retrieved successfully',
   allPlansSuccess: 'Plans retrieved successfully',
   agencyDetailsSuccess: 'Agency details retrieved successfully',
+  planDetailsSuccess: 'Plan details retrieved successfully',
 };
