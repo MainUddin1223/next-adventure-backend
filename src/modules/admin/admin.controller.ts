@@ -54,4 +54,21 @@ const getAgencies = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AdminController = { getUsers, getAdmins, getAgencies };
+const getAgencyDetailsById = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const result = await adminService.getAgencyDetailsById(id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.agencyDetailsSuccess,
+    data: result,
+  });
+});
+
+export const AdminController = {
+  getUsers,
+  getAdmins,
+  getAgencies,
+  getAgencyDetailsById,
+};

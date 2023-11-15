@@ -7,5 +7,8 @@ const router = express.Router();
 router.route('/users').get(verifyAdmin, AdminController.getUsers);
 router.route('/admins').get(verifyAdmin, AdminController.getAdmins);
 router.route('/agencies').get(verifyAdmin, AdminController.getAgencies);
+router
+  .route('/agencies/:id')
+  .get(verifyAdmin, AdminController.getAgencyDetailsById);
 
 export default { adminRouter: router };
