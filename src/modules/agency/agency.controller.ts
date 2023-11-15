@@ -10,6 +10,7 @@ import {
 import { createPlanSchema, updatePlanSchema } from './agency.validation';
 import { pagination } from '../../utils/helpers/pagination';
 import pick from '../../utils/helpers/pick';
+import ApiError from '../../utils/errorHandlers/apiError';
 
 const createTourPlan = catchAsync(async (req: Request, res: Response) => {
   const { error } = await createPlanSchema.validate(req.body);
@@ -121,6 +122,12 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const status = req.query.status as 'confirmed' | 'rejected';
   const agencyId = Number(req.user?.userId);
+  if (status == 'confirmed' || status == 'rejected') {
+    throw new ApiError(
+      StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      agencyControllerMsg.manageScheduleError
+    );
+  }
   const result = await agencyService.manageSchedule(id, agencyId, status);
   sendResponse(res, {
     statusCode: StatusCodes.OK,

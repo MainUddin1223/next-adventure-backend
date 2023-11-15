@@ -8,6 +8,7 @@ export const agencyControllerMsg = {
   planDetailsSuccess: 'Plan details retrieved successfully',
   staticsSuccess: 'Statics retrieved successfully',
   manageScheduleSuccess: 'Schedule updated successfully',
+  manageScheduleError: 'Invalid status',
 };
 export const agencyServiceMsg = {
   updatePlanError: 'Deadline is over.You can not update this plan',
