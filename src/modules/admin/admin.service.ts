@@ -3,9 +3,10 @@ import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 
 const prisma = new PrismaClient();
 
-const getUsers = async (
+const getUsersOrAdmins = async (
   meta: IPaginationValue,
-  filterOptions: IFilterOption
+  filterOptions: IFilterOption,
+  role: 'admin' | 'user'
 ) => {
   const { skip, take, orderBy, page } = meta;
   const queryOption: { [key: string]: any } = {};
@@ -39,7 +40,8 @@ const getUsers = async (
     take,
     orderBy,
     where: {
-      role: 'user',
+      role,
+      ...queryOption,
     },
     select: {
       id: true,
@@ -55,34 +57,13 @@ const getUsers = async (
     },
   });
   const totalCount = await prisma.auth.count({
-    where: { role: 'user' },
+    where: { role },
   });
   const totalPage = totalCount > take ? totalCount / Number(take) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
   };
-};
-
-const getAdmins = async () => {
-  const result = await prisma.auth.findMany({
-    where: {
-      role: 'admin',
-    },
-    select: {
-      id: true,
-      accountStatus: true,
-      email: true,
-      user: {
-        select: {
-          name: true,
-          id: true,
-          profileImg: true,
-        },
-      },
-    },
-  });
-  return result;
 };
 
 const getAgencies = async () => {
@@ -297,8 +278,7 @@ const getPlanDetailsById = async (id: number) => {
 };
 
 export const adminService = {
-  getUsers,
-  getAdmins,
+  getUsersOrAdmins,
   getAgencies,
   upcomingSchedules,
   getAllPlans,

@@ -10,7 +10,11 @@ import pick from '../../utils/helpers/pick';
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pagination(req.query);
   const filter = pick(req.query, getUsersFilterOptions);
-  const result = await adminService.getUsers(paginationOptions, filter);
+  const result = await adminService.getUsersOrAdmins(
+    paginationOptions,
+    filter,
+    'user'
+  );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -20,4 +24,21 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AdminController = { getUsers };
+const getAdmins = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, getUsersFilterOptions);
+  const result = await adminService.getUsersOrAdmins(
+    paginationOptions,
+    filter,
+    'admin'
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.getAdminsSuccess,
+    data: result,
+  });
+});
+
+export const AdminController = { getUsers, getAdmins };

@@ -5,5 +5,6 @@ import { AdminController } from './admin.controller';
 const router = express.Router();
 
 router.route('/users').get(verifyAdmin, AdminController.getUsers);
+router.route('/admins').get(verifyAdmin, AdminController.getAdmins);
 
 export default { adminRouter: router };
