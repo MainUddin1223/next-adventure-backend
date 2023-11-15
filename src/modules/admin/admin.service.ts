@@ -3,8 +3,41 @@ import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 
 const prisma = new PrismaClient();
 
-const getUsers = async () => {
+const getUsers = async (
+  meta: IPaginationValue,
+  filterOptions: IFilterOption
+) => {
+  const { skip, take, orderBy, page } = meta;
+  const queryOption: { [key: string]: any } = {};
+  if (Object.keys(filterOptions).length) {
+    const { search, ...restOptions } = filterOptions;
+
+    if (search) {
+      queryOption['OR'] = [
+        {
+          email: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          user: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+    Object.entries(restOptions).forEach(([field, value]) => {
+      queryOption[field] = value;
+    });
+  }
   const result = await prisma.auth.findMany({
+    skip: Number(skip),
+    take,
+    orderBy,
     where: {
       role: 'user',
     },
@@ -21,7 +54,14 @@ const getUsers = async () => {
       },
     },
   });
-  return result;
+  const totalCount = await prisma.auth.count({
+    where: { role: 'user' },
+  });
+  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  return {
+    result,
+    meta: { page: page, size: take, total: totalCount, totalPage },
+  };
 };
 
 const getAdmins = async () => {
