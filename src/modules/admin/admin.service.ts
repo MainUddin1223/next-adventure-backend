@@ -329,6 +329,74 @@ const getPlanDetailsById = async (id: number) => {
   return result;
 };
 
+const getBookings = async (
+  meta: IPaginationValue,
+  filterOptions: IFilterOption
+) => {
+  const { skip, take, orderBy, page } = meta;
+  const queryOption: { [key: string]: any } = {};
+  if (Object.keys(filterOptions).length) {
+    const { search, ...restOptions } = filterOptions;
+
+    if (search) {
+      queryOption['OR'] = [
+        {
+          plan: {
+            planName: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          agency: {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+    Object.entries(restOptions).forEach(([field, value]) => {
+      queryOption[field] = value;
+    });
+  }
+
+  const result = await prisma.bookings.findMany({
+    skip: Number(skip),
+    take,
+    orderBy,
+    where: {
+      ...queryOption,
+    },
+    select: {
+      id: true,
+      status: true,
+      seats: true,
+      agency: {
+        select: {
+          name: true,
+          id: true,
+          profileImg: true,
+        },
+      },
+      plan: {
+        select: {
+          planName: true,
+          destination: true,
+        },
+      },
+    },
+  });
+  const totalCount = await prisma.plan.count();
+  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  return {
+    result,
+    meta: { page: page, size: take, total: totalCount, totalPage },
+  };
+};
+
 export const adminService = {
   getUsersOrAdmins,
   getAgencies,
@@ -336,4 +404,5 @@ export const adminService = {
   getAllPlans,
   getAgencyDetailsById,
   getPlanDetailsById,
+  getBookings,
 };

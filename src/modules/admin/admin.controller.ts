@@ -107,6 +107,19 @@ const getPlanDetailsById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getBookings = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pagination(req.query);
+  const filter = pick(req.query, getUsersFilterOptions);
+  const result = await adminService.getBookings(paginationOptions, filter);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.bookingsSuccess,
+    data: result,
+  });
+});
+
 export const AdminController = {
   getUsers,
   getAdmins,
@@ -115,4 +128,5 @@ export const AdminController = {
   getUpcomingSchedules,
   getAllPlans,
   getPlanDetailsById,
+  getBookings,
 };
