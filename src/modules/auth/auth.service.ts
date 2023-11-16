@@ -58,8 +58,6 @@ const registerAgency = async (payload: IRegisterPayload) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   const result = await prisma.$transaction(async prisma => {
-    // Insert into auth table
-
     const auth = await prisma.auth.create({
       data: {
         email,
@@ -67,8 +65,6 @@ const registerAgency = async (payload: IRegisterPayload) => {
         role: 'agency',
       },
     });
-
-    // Insert into agency table
 
     const agencyData = await prisma.agency.create({
       data: {

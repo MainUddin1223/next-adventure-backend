@@ -244,9 +244,43 @@ const getLandingPageData = async () => {
         gt: new Date(),
       },
     },
+    select: {
+      id: true,
+      planName: true,
+      images: true,
+      destination: true,
+      departureFrom: true,
+      deadline: true,
+      agency: {
+        select: {
+          id: true,
+          name: true,
+          rating: true,
+        },
+      },
+    },
   });
-  const agencies = await prisma.agency.findMany({ take: 6 });
-  const reviews = await prisma.reviews.findMany();
+
+  const agencies = await prisma.agency.findMany({
+    take: 6,
+    select: {
+      id: true,
+      name: true,
+      rating: true,
+    },
+  });
+  const reviews = await prisma.reviews.findMany({
+    select: {
+      rating: true,
+      feedback: true,
+      user: {
+        select: {
+          name: true,
+          profileImg: true,
+        },
+      },
+    },
+  });
   return { plans, agencies, reviews };
 };
 
