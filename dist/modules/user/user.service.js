@@ -130,19 +130,19 @@ const getTourPlans = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, 
                 gt: new Date(),
             } }),
         select: {
-            planName: true,
             id: true,
-            departureTime: true,
+            planName: true,
+            images: true,
+            destination: true,
             departureFrom: true,
             deadline: true,
-            destination: true,
-            images: true,
             price: true,
             agency: {
                 select: {
-                    name: true,
-                    location: true,
                     id: true,
+                    name: true,
+                    rating: true,
+                    profileImg: true,
                 },
             },
         },
@@ -247,7 +247,7 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
                     id: true,
                     name: true,
                     rating: true,
-                    profileImg: true
+                    profileImg: true,
                 },
             },
         },
@@ -258,7 +258,7 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
             id: true,
             name: true,
             rating: true,
-            profileImg: true
+            profileImg: true,
         },
     });
     const reviews = yield prisma.reviews.findMany({

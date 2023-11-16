@@ -16,3 +16,17 @@ export interface IReviewPlan {
   bookingId: number;
   userId: number;
 }
+
+export interface IAgencyResult {
+  id: number;
+  name: string;
+  profileImg: string;
+  rating: any;
+  plans?: {
+    id: number;
+  }[];
+  ongoingPlans?: number;
+}
+export interface IResult {
+  result: IAgencyResult[] | [];
+}

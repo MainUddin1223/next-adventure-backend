@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 import {
   BookPlanPayload,
+  IAgencyResult,
   IReviewPlan,
   IReviewPlatform,
 } from './user.interface';
@@ -42,7 +43,7 @@ const getAgencies = async (
     });
   }
 
-  const result = await prisma.agency.findMany({
+  const result: IAgencyResult[] | [] = await prisma.agency.findMany({
     skip,
     take,
     orderBy,
@@ -54,9 +55,27 @@ const getAgencies = async (
       name: true,
       profileImg: true,
       rating: true,
-      totalReviews: true,
-      totalStar: true,
+      plans: {
+        where: {
+          deadline: {
+            gt: new Date(),
+          },
+        },
+        select: {
+          id: true,
+        },
+      },
     },
+  });
+
+  result.forEach(agency => {
+    if (agency?.plans && agency.plans.length) {
+      agency['ongoingPlans'] = agency.plans.length;
+      delete agency.plans;
+    } else {
+      agency['ongoingPlans'] = 0;
+      delete agency.plans;
+    }
   });
 
   const totalCount = await prisma.agency.count();
@@ -134,19 +153,19 @@ const getTourPlans = async (
       },
     },
     select: {
-      planName: true,
       id: true,
-      departureTime: true,
+      planName: true,
+      images: true,
+      destination: true,
       departureFrom: true,
       deadline: true,
-      destination: true,
-      images: true,
       price: true,
       agency: {
         select: {
-          name: true,
-          location: true,
           id: true,
+          name: true,
+          rating: true,
+          profileImg: true,
         },
       },
     },
