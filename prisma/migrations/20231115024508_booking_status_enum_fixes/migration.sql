@@ -1,2 +1,2 @@
 -- AlterEnum
-ALTER TYPE "BookingStatus" ADD VALUE 'postponded';
+ALTER TYPE "BookingStatus" ADD VALUE 'postponed';

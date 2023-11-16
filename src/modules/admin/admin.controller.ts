@@ -136,7 +136,7 @@ const getBookingById = catchAsync(async (req: Request, res: Response) => {
 const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const status = req.query.status;
-  if (status == 'pending' || status === 'postponded') {
+  if (status == 'pending' || status === 'postponed') {
     const result = await adminService.manageSchedule(id, status);
     sendResponse(res, {
       statusCode: StatusCodes.OK,
@@ -164,7 +164,7 @@ const releasePayoutByBooking = catchAsync(
   async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const status = req.query.status;
-    if (status == 'released' || status === 'postponded') {
+    if (status == 'released' || status === 'postponed') {
       const result = await adminService.managePayout(id, status);
       sendResponse(res, {
         statusCode: StatusCodes.OK,

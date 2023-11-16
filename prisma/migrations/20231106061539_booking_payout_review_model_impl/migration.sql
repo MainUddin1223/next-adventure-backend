@@ -6,7 +6,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "PayoutStatus" AS ENUM ('pending', 'released', 'postponded');
+CREATE TYPE "PayoutStatus" AS ENUM ('pending', 'released', 'postponed');
 
 -- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('canceled', 'confirmed', 'pending', 'rejected');

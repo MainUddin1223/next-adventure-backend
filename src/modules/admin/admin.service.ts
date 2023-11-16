@@ -442,7 +442,7 @@ const getBookingById = async (id: number) => {
   return result;
 };
 
-const manageSchedule = async (id: number, status: 'pending' | 'postponded') => {
+const manageSchedule = async (id: number, status: 'pending' | 'postponed') => {
   const getBooking = await prisma.bookings.findUnique({
     where: { id },
     include: {
@@ -470,7 +470,7 @@ const manageSchedule = async (id: number, status: 'pending' | 'postponded') => {
       adminServiceMsg.sameStatusError
     );
   }
-  if (getBooking.status !== 'postponded' && status == 'pending') {
+  if (getBooking.status !== 'postponed' && status == 'pending') {
     throw new ApiError(StatusCodes.BAD_REQUEST, adminServiceMsg.invalidStatus);
   }
   const result = await prisma.bookings.update({
@@ -501,7 +501,7 @@ const releasePayoutByPlan = async (id: number) => {
   return { result: 'Payout released successfully' };
 };
 
-const managePayout = async (id: number, status: 'postponded' | 'released') => {
+const managePayout = async (id: number, status: 'postponed' | 'released') => {
   const getPayout = await prisma.payouts.findUnique({
     where: {
       id,

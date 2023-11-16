@@ -164,7 +164,7 @@ model Payouts {
 enum PayoutStatus {
   pending
   released
-  postponded
+  postponed
 }
 
 enum BookingStatus {
@@ -173,7 +173,7 @@ enum BookingStatus {
   pending
   rejected
   requested
-  postponded
+  postponed
 }
 
 enum Role {
