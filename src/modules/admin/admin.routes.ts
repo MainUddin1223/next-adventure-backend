@@ -20,5 +20,11 @@ router.route('/plans/:id').get(verifyAdmin, AdminController.getPlanDetailsById);
 router
   .route('/agencies/:id')
   .get(verifyAdmin, AdminController.getAgencyDetailsById);
+router
+  .route('/manage-plan-payout/:id')
+  .patch(verifyAdmin, AdminController.releasePayoutByBooking);
+router
+  .route('/manage-booking-payout/:id')
+  .patch(verifyAdmin, AdminController.releasePayoutByBooking);
 
 export default { adminRouter: router };

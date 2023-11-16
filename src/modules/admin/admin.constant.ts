@@ -12,3 +12,11 @@ export const AdminControllerMsg = {
   bookingDetailsSuccess: 'Booking details retrieved successfully',
   manageBookingSuccess: 'Booking status updated successfully',
 };
+
+export const adminServiceMsg = {
+  bookingNotFound: 'Booking not found',
+  bookingDeadlineError: 'Booking Deadline is over',
+  notChangeableError: 'User already canceled the booking',
+  sameStatusError: 'Booking status already in pending',
+  invalidStatus: 'You can not change the status into pending',
+};

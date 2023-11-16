@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
+import { adminServiceMsg } from './admin.constant';
 
 const prisma = new PrismaClient();
 
@@ -449,34 +450,95 @@ const manageSchedule = async (id: number, status: 'pending' | 'postponded') => {
     },
   });
   if (!getBooking) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'Booking not found');
+    throw new ApiError(StatusCodes.NOT_FOUND, adminServiceMsg.bookingNotFound);
   }
   if (getBooking.plan.deadline < new Date()) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'Booking Deadline is over');
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      adminServiceMsg.bookingDeadlineError
+    );
   }
   if (getBooking.status === 'canceled') {
     throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      'User already canceled the booking'
+      StatusCodes.BAD_REQUEST,
+      adminServiceMsg.notChangeableError
     );
   }
   if (getBooking.status === 'pending' && status == 'pending') {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Booking status already in pending'
+      adminServiceMsg.sameStatusError
     );
   }
   if (getBooking.status !== 'postponded' && status == 'pending') {
-    throw new ApiError(
-      StatusCodes.BAD_REQUEST,
-      'You can not change the status into pending'
-    );
+    throw new ApiError(StatusCodes.BAD_REQUEST, adminServiceMsg.invalidStatus);
   }
   const result = await prisma.bookings.update({
     where: { id },
     data: { status },
   });
   return result;
+};
+
+const releasePayoutByPlan = async (id: number) => {
+  await prisma.payouts.updateMany({
+    where: {
+      planId: id,
+      status: 'pending',
+      plan: {
+        departureTime: {
+          gt: new Date(),
+        },
+      },
+      booking: {
+        status: 'confirmed',
+      },
+    },
+    data: {
+      status: 'released',
+    },
+  });
+  return { result: 'Payout released successfully' };
+};
+
+const managePayout = async (id: number, status: 'postponded' | 'released') => {
+  const getPayout = await prisma.payouts.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      plan: true,
+      booking: true,
+    },
+  });
+  if (!getPayout) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Payout not found');
+  }
+  if (getPayout.plan.departureTime > new Date()) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'Booking yet to be completed successfully'
+    );
+  }
+  if (getPayout.booking.status !== 'confirmed') {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'Booking was not completed successfully'
+    );
+  }
+  if (getPayout.status !== 'released') {
+    await prisma.payouts.update({
+      where: { id },
+      data: { status },
+    });
+  } else {
+    throw new ApiError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Something went wrong'
+    );
+  }
+
+  return { result: 'Payout released successfully' };
 };
 
 export const adminService = {
@@ -489,4 +551,6 @@ export const adminService = {
   getBookings,
   getBookingById,
   manageSchedule,
+  releasePayoutByPlan,
+  managePayout,
 };

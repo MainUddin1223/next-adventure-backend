@@ -149,6 +149,35 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const releasePayoutByPlan = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const result = await adminService.releasePayoutByPlan(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: AdminControllerMsg.manageBookingSuccess,
+    data: result,
+  });
+});
+
+const releasePayoutByBooking = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const status = req.query.status;
+    if (status == 'released' || status === 'postponded') {
+      const result = await adminService.managePayout(id, status);
+      sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: AdminControllerMsg.manageBookingSuccess,
+        data: result,
+      });
+    } else {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid status');
+    }
+  }
+);
+
 export const AdminController = {
   getUsers,
   getAdmins,
@@ -160,4 +189,6 @@ export const AdminController = {
   getBookings,
   getBookingById,
   manageSchedule,
+  releasePayoutByPlan,
+  releasePayoutByBooking,
 };
