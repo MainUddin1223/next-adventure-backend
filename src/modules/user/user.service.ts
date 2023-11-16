@@ -251,11 +251,13 @@ const getLandingPageData = async () => {
       destination: true,
       departureFrom: true,
       deadline: true,
+      price: true,
       agency: {
         select: {
           id: true,
           name: true,
           rating: true,
+          profileImg: true,
         },
       },
     },
@@ -267,6 +269,7 @@ const getLandingPageData = async () => {
       id: true,
       name: true,
       rating: true,
+      profileImg: true,
     },
   });
   const reviews = await prisma.reviews.findMany({

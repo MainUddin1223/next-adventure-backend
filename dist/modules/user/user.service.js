@@ -234,9 +234,45 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
                 gt: new Date(),
             },
         },
+        select: {
+            id: true,
+            planName: true,
+            images: true,
+            destination: true,
+            departureFrom: true,
+            deadline: true,
+            price: true,
+            agency: {
+                select: {
+                    id: true,
+                    name: true,
+                    rating: true,
+                    profileImg: true
+                },
+            },
+        },
     });
-    const agencies = yield prisma.agency.findMany({ take: 6 });
-    const reviews = yield prisma.reviews.findMany();
+    const agencies = yield prisma.agency.findMany({
+        take: 6,
+        select: {
+            id: true,
+            name: true,
+            rating: true,
+            profileImg: true
+        },
+    });
+    const reviews = yield prisma.reviews.findMany({
+        select: {
+            rating: true,
+            feedback: true,
+            user: {
+                select: {
+                    name: true,
+                    profileImg: true,
+                },
+            },
+        },
+    });
     return { plans, agencies, reviews };
 });
 const bookPlan = (payload) => __awaiter(void 0, void 0, void 0, function* () {

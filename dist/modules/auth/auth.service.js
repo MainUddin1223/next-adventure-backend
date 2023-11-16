@@ -65,7 +65,6 @@ const registerAgency = (payload) => __awaiter(void 0, void 0, void 0, function* 
     const { email, password } = payload, data = __rest(payload, ["email", "password"]);
     const hashedPassword = bcrypt_1.default.hashSync(password, 10);
     const result = yield prisma.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
-        // Insert into auth table
         const auth = yield prisma.auth.create({
             data: {
                 email,
@@ -73,7 +72,6 @@ const registerAgency = (payload) => __awaiter(void 0, void 0, void 0, function* 
                 role: 'agency',
             },
         });
-        // Insert into agency table
         const agencyData = yield prisma.agency.create({
             data: Object.assign(Object.assign({}, data), { authId: auth.id }),
         });
