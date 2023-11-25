@@ -64,9 +64,27 @@ const getAgencies = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
             name: true,
             profileImg: true,
             rating: true,
-            totalReviews: true,
-            totalStar: true,
+            plans: {
+                where: {
+                    deadline: {
+                        gt: new Date(),
+                    },
+                },
+                select: {
+                    id: true,
+                },
+            },
         },
+    });
+    result.forEach(agency => {
+        if ((agency === null || agency === void 0 ? void 0 : agency.plans) && agency.plans.length) {
+            agency['ongoingPlans'] = agency.plans.length;
+            delete agency.plans;
+        }
+        else {
+            agency['ongoingPlans'] = 0;
+            delete agency.plans;
+        }
     });
     const totalCount = yield prisma.agency.count();
     const totalPage = totalCount > take ? totalCount / Number(take) : 1;

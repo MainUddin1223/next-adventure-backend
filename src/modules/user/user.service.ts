@@ -196,6 +196,7 @@ const getAgencyById = async (id: number) => {
       contactNo: true,
       profileImg: true,
       rating: true,
+      totalReviews: true,
       about: true,
       plans: {
         orderBy: {
@@ -211,6 +212,18 @@ const getAgencyById = async (id: number) => {
           destination: true,
           images: true,
           price: true,
+        },
+      },
+      planReviews: {
+        select: {
+          feedback: true,
+          rating: true,
+          user: {
+            select: {
+              profileImg: true,
+              name: true,
+            },
+          },
         },
       },
     },
