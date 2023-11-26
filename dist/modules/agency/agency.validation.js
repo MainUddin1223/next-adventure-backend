@@ -72,48 +72,11 @@ exports.createPlanSchema = joi_1.default.object({
     }),
 });
 exports.updatePlanSchema = joi_1.default.object({
-    planName: joi_1.default.string().messages({
-        'string.pattern.base': 'Invalid plan name',
-    }),
-    images: joi_1.default.array().items(joi_1.default.string()).messages({
-        'array.base': 'At least one image is required',
-        'array.includes': 'Images must be strings',
-    }),
-    destination: joi_1.default.string().messages({
-        'string.pattern.base': 'Invalid destination',
-    }),
-    departureFrom: joi_1.default.string().messages({
-        'string.pattern.base': 'Invalid departure location',
-    }),
-    duration: joi_1.default.string().messages({
-        'string.pattern.base': 'Invalid duration',
-    }),
-    meals: joi_1.default.string().messages({
-        'string.pattern.base': 'Invalid meals',
-    }),
-    price: joi_1.default.number().precision(2).messages({
-        'number.base': 'Invalid price',
-        'number.precision': 'Price must have 2 decimal places',
-    }),
-    coverLocations: joi_1.default.array().items(joi_1.default.string().messages({
-        'array.base': 'At least one cover location is required',
-        'array.includes': 'Cover location must be strings',
-    })),
-    events: joi_1.default.array().items(joi_1.default.string().messages({
-        'array.base': 'At least one event is required',
-        'array.includes': 'Event must be strings',
-    })),
     notAllowed: joi_1.default.array().items(joi_1.default.string().messages({
         'array.includes': 'Not allowed activities must be strings',
     })),
-    departureTime: joi_1.default.date().messages({
-        'date.base': 'Invalid starting time',
-    }),
     description: joi_1.default.string().messages({
         'string.pattern.base': 'Invalid description',
-    }),
-    deadline: joi_1.default.date().messages({
-        'date.base': 'Invalid booking deadline',
     }),
     totalSeats: joi_1.default.number().messages({
         'number.base': 'Invalid total seats',

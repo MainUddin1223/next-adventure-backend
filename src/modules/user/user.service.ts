@@ -258,6 +258,10 @@ const getTourPlanById = async (id: number) => {
       deadline: true,
       destination: true,
       events: true,
+      notAllowed: true,
+      totalSeats: true,
+      totalBooking: true,
+      status: true,
       agency: {
         select: {
           name: true,

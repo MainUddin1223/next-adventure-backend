@@ -48,9 +48,6 @@ const updateTourPlan = (planId, data) => __awaiter(void 0, void 0, void 0, funct
     const result = yield prisma.plan.update({
         where: {
             id: planId,
-            deadline: {
-                gt: new Date(),
-            },
         },
         data,
     });
