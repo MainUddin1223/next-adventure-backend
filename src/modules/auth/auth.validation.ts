@@ -49,3 +49,36 @@ export const agencyRegisterSchema = Joi.object({
     'any.required': 'About is required',
   }),
 });
+
+export const updateAgencyProfileSchema = Joi.object({
+  name: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid name',
+  }),
+  profileImg: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid url',
+  }),
+  contactNo: Joi.string().optional().messages({
+    'string.pattern.base': 'Invalid contact number',
+  }),
+  location: Joi.string().optional().messages({
+    'string.pattern.base': 'Invalid location',
+  }),
+  about: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid info',
+  }),
+}).or('name', 'profileImg', 'contactNo', 'location', 'about');
+
+export const updateUserProfileSchema = Joi.object({
+  name: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid name',
+  }),
+  profileImg: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid url',
+  }),
+  contactNo: Joi.string().optional().messages({
+    'string.pattern.base': 'Invalid contact number',
+  }),
+  about: Joi.string().optional().messages({
+    'string.pattern.base': 'Please enter a valid info',
+  }),
+}).or('name', 'profileImg', 'contactNo', 'about');

@@ -3,8 +3,14 @@ import catchAsync from '../../utils/errorHandlers/catchAsync';
 import { authService } from './auth.service';
 import sendResponse from '../../utils/helpers/sendResponse';
 import { StatusCodes } from 'http-status-codes';
-import { agencyRegisterSchema, signUpSchema } from './auth.validation';
+import {
+  agencyRegisterSchema,
+  signUpSchema,
+  updateAgencyProfileSchema,
+  updateUserProfileSchema,
+} from './auth.validation';
 import { authResponseMessage } from './auth.constant';
+import ApiError from '../../utils/errorHandlers/apiError';
 
 const signUp = catchAsync(async (req: Request, res: Response) => {
   const { error } = await signUpSchema.validate(req.body);
@@ -93,10 +99,30 @@ const deleteAccount = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const validateSchema =
+    req.user?.role === 'agency'
+      ? updateAgencyProfileSchema
+      : updateUserProfileSchema;
+  const { error } = await validateSchema.validate(req.body);
+  if (error) {
+    console.log(error.details[0]?.message);
+    throw new ApiError(500, error.details[0]?.message);
+  }
+  await authService.updateProfile(req?.user?.role, req?.user?.userId, req.body);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: authResponseMessage.accountUpdateMsg,
+    data: authResponseMessage.accountUpdateMsg,
+  });
+});
+
 export const authController = {
   signUp,
   registerAgency,
   login,
   getProfileData,
   deleteAccount,
+  updateProfile,
 };

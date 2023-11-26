@@ -5,7 +5,12 @@ import { jwtToken } from '../../utils/auth_jwt/jwtToken';
 import config from '../../utils/config';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
-import { getAgencyAuthInfo, getUserAuthInfo } from './auth.utils';
+import {
+  getAgencyAuthInfo,
+  getUserAuthInfo,
+  updateAgencyProfile,
+  updateUserAdminProfile,
+} from './auth.utils';
 import { authServiceMessage } from './auth.constant';
 
 const prisma = new PrismaClient();
@@ -191,10 +196,26 @@ const deleteAccount = async (id: number) => {
   }
   return authServiceMessage.deleteAccountMsg;
 };
+
+const updateProfile = async (
+  role: 'agency' | 'user' | 'admin' | 'super_admin',
+  id: number,
+  data: Partial<ISignUpPayload | IRegisterPayload>
+) => {
+  let result;
+  if (role == 'agency') {
+    result = await updateAgencyProfile(id, data);
+  } else {
+    result = await updateUserAdminProfile(id, data);
+  }
+  return result;
+};
+
 export const authService = {
   signUp,
   registerAgency,
   login,
   getProfile,
   deleteAccount,
+  updateProfile,
 };

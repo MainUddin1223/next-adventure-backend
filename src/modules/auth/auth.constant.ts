@@ -6,6 +6,7 @@ export const authResponseMessage = {
   loginSuccessful: 'Successfully logged in',
   profileDataMsg: 'Profile data fetched successfully',
   accountDeleteMsg: 'Account deleted successfully',
+  accountUpdateMsg: 'Account updated successfully',
 };
 
 export const authServiceMessage = {

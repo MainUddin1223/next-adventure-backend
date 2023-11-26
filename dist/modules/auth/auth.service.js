@@ -128,6 +128,12 @@ const getProfile = (id, role) => __awaiter(void 0, void 0, void 0, function* () 
                 totalReviews: true,
                 rating: true,
                 about: true,
+                location: true,
+                auth: {
+                    select: {
+                        email: true,
+                    },
+                },
             },
         });
         return result;
