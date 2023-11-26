@@ -149,6 +149,12 @@ const getProfile = async (id: number, role: string) => {
         totalReviews: true,
         rating: true,
         about: true,
+        location: true,
+        auth: {
+          select: {
+            email: true,
+          },
+        },
       },
     });
     return result;

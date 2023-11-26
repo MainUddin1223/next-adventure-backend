@@ -210,6 +210,14 @@ const getAgencyById = (id) => __awaiter(void 0, void 0, void 0, function* () {
                 select: {
                     feedback: true,
                     rating: true,
+                    createdAt: true,
+                    plan: {
+                        select: {
+                            planName: true,
+                            images: true,
+                            destination: true,
+                        },
+                    },
                     user: {
                         select: {
                             profileImg: true,
