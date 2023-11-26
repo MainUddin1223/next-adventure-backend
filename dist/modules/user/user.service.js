@@ -188,6 +188,7 @@ const getAgencyById = (id) => __awaiter(void 0, void 0, void 0, function* () {
             contactNo: true,
             profileImg: true,
             rating: true,
+            totalReviews: true,
             about: true,
             plans: {
                 orderBy: {
@@ -203,6 +204,18 @@ const getAgencyById = (id) => __awaiter(void 0, void 0, void 0, function* () {
                     destination: true,
                     images: true,
                     price: true,
+                },
+            },
+            planReviews: {
+                select: {
+                    feedback: true,
+                    rating: true,
+                    user: {
+                        select: {
+                            profileImg: true,
+                            name: true,
+                        },
+                    },
                 },
             },
         },

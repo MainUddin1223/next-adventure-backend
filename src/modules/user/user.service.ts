@@ -218,6 +218,14 @@ const getAgencyById = async (id: number) => {
         select: {
           feedback: true,
           rating: true,
+          createdAt: true,
+          plan: {
+            select: {
+              planName: true,
+              images: true,
+              destination: true,
+            },
+          },
           user: {
             select: {
               profileImg: true,
