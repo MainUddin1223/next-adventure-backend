@@ -1,4 +1,9 @@
-export interface IPlanData {
+export interface IUpdatePlan {
+  description: string;
+  notAllowed: string[];
+  totalSeats: number;
+}
+export interface IPlanData extends IUpdatePlan {
   agencyId: number;
   planName: string;
   destination: string;
@@ -7,14 +12,12 @@ export interface IPlanData {
   price: number;
   images: string[];
   duration: string;
-  description: string;
   departureTime: Date;
   meals: string;
   events: string[];
-  notAllowed: string[];
   deadline: Date;
-  totalSeats: number;
 }
+
 export interface IPayouts {
   status: 'pending' | 'canceled' | 'released' | 'upcoming';
   totalAmount: number;

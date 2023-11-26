@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.agencyRegisterSchema = exports.signUpSchema = void 0;
+exports.updateUserProfileSchema = exports.updateAgencyProfileSchema = exports.agencyRegisterSchema = exports.signUpSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.signUpSchema = joi_1.default.object({
     email: joi_1.default.string()
@@ -53,3 +53,34 @@ exports.agencyRegisterSchema = joi_1.default.object({
         'any.required': 'About is required',
     }),
 });
+exports.updateAgencyProfileSchema = joi_1.default.object({
+    name: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid name',
+    }),
+    profileImg: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid url',
+    }),
+    contactNo: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Invalid contact number',
+    }),
+    location: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Invalid location',
+    }),
+    about: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid info',
+    }),
+}).or('name', 'profileImg', 'contactNo', 'location', 'about');
+exports.updateUserProfileSchema = joi_1.default.object({
+    name: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid name',
+    }),
+    profileImg: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid url',
+    }),
+    contactNo: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Invalid contact number',
+    }),
+    about: joi_1.default.string().optional().messages({
+        'string.pattern.base': 'Please enter a valid info',
+    }),
+}).or('name', 'profileImg', 'contactNo', 'about');

@@ -74,54 +74,13 @@ export const createPlanSchema = Joi.object({
 });
 
 export const updatePlanSchema = Joi.object({
-  planName: Joi.string().messages({
-    'string.pattern.base': 'Invalid plan name',
-  }),
-  images: Joi.array().items(Joi.string()).messages({
-    'array.base': 'At least one image is required',
-    'array.includes': 'Images must be strings',
-  }),
-  destination: Joi.string().messages({
-    'string.pattern.base': 'Invalid destination',
-  }),
-  departureFrom: Joi.string().messages({
-    'string.pattern.base': 'Invalid departure location',
-  }),
-  duration: Joi.string().messages({
-    'string.pattern.base': 'Invalid duration',
-  }),
-  meals: Joi.string().messages({
-    'string.pattern.base': 'Invalid meals',
-  }),
-  price: Joi.number().precision(2).messages({
-    'number.base': 'Invalid price',
-    'number.precision': 'Price must have 2 decimal places',
-  }),
-  coverLocations: Joi.array().items(
-    Joi.string().messages({
-      'array.base': 'At least one cover location is required',
-      'array.includes': 'Cover location must be strings',
-    })
-  ),
-  events: Joi.array().items(
-    Joi.string().messages({
-      'array.base': 'At least one event is required',
-      'array.includes': 'Event must be strings',
-    })
-  ),
   notAllowed: Joi.array().items(
     Joi.string().messages({
       'array.includes': 'Not allowed activities must be strings',
     })
   ),
-  departureTime: Joi.date().messages({
-    'date.base': 'Invalid starting time',
-  }),
   description: Joi.string().messages({
     'string.pattern.base': 'Invalid description',
-  }),
-  deadline: Joi.date().messages({
-    'date.base': 'Invalid booking deadline',
   }),
   totalSeats: Joi.number().messages({
     'number.base': 'Invalid total seats',

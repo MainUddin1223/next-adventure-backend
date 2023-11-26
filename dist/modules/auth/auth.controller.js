@@ -19,6 +19,7 @@ const sendResponse_1 = __importDefault(require("../../utils/helpers/sendResponse
 const http_status_codes_1 = require("http-status-codes");
 const auth_validation_1 = require("./auth.validation");
 const auth_constant_1 = require("./auth.constant");
+const apiError_1 = __importDefault(require("../../utils/errorHandlers/apiError"));
 const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { error } = yield auth_validation_1.signUpSchema.validate(req.body);
@@ -102,10 +103,29 @@ const deleteAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+const updateProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _g, _h, _j, _k, _l;
+    const validateSchema = ((_g = req.user) === null || _g === void 0 ? void 0 : _g.role) === 'agency'
+        ? auth_validation_1.updateAgencyProfileSchema
+        : auth_validation_1.updateUserProfileSchema;
+    const { error } = yield validateSchema.validate(req.body);
+    if (error) {
+        console.log((_h = error.details[0]) === null || _h === void 0 ? void 0 : _h.message);
+        throw new apiError_1.default(500, (_j = error.details[0]) === null || _j === void 0 ? void 0 : _j.message);
+    }
+    yield auth_service_1.authService.updateProfile((_k = req === null || req === void 0 ? void 0 : req.user) === null || _k === void 0 ? void 0 : _k.role, (_l = req === null || req === void 0 ? void 0 : req.user) === null || _l === void 0 ? void 0 : _l.userId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: auth_constant_1.authResponseMessage.accountUpdateMsg,
+        data: auth_constant_1.authResponseMessage.accountUpdateMsg,
+    });
+}));
 exports.authController = {
     signUp,
     registerAgency,
     login,
     getProfileData,
     deleteAccount,
+    updateProfile,
 };

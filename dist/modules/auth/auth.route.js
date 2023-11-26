@@ -11,5 +11,8 @@ router.route('/sign-up').post(auth_controller_1.authController.signUp);
 router.route('/register-agency').post(auth_controller_1.authController.registerAgency);
 router.route('/login').post(auth_controller_1.authController.login);
 router.route('/delete-account').post(verifyAuth_1.verifyAuth, auth_controller_1.authController.deleteAccount);
-router.route('/profile').get(verifyAuth_1.verifyAuth, auth_controller_1.authController.getProfileData);
+router
+    .route('/profile')
+    .get(verifyAuth_1.verifyAuth, auth_controller_1.authController.getProfileData)
+    .patch(verifyAuth_1.verifyAuth, auth_controller_1.authController.updateProfile);
 exports.default = { authRouter: router };

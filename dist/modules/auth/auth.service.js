@@ -167,10 +167,21 @@ const deleteAccount = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return auth_constant_1.authServiceMessage.deleteAccountMsg;
 });
+const updateProfile = (role, id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    let result;
+    if (role == 'agency') {
+        result = yield (0, auth_utils_1.updateAgencyProfile)(id, data);
+    }
+    else {
+        result = yield (0, auth_utils_1.updateUserAdminProfile)(id, data);
+    }
+    return result;
+});
 exports.authService = {
     signUp,
     registerAgency,
     login,
     getProfile,
     deleteAccount,
+    updateProfile,
 };

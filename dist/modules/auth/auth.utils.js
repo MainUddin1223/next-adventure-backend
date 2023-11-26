@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAgencyAuthInfo = exports.getUserAuthInfo = void 0;
+exports.updateAgencyProfile = exports.updateUserAdminProfile = exports.getAgencyAuthInfo = exports.getUserAuthInfo = void 0;
 const client_1 = require("@prisma/client");
 const jwtToken_1 = require("../../utils/auth_jwt/jwtToken");
 const config_1 = __importDefault(require("../../utils/config"));
@@ -69,3 +69,23 @@ const getAgencyAuthInfo = (id) => __awaiter(void 0, void 0, void 0, function* ()
     return { accessToken, profileData: { profileImg: result === null || result === void 0 ? void 0 : result.profileImg } };
 });
 exports.getAgencyAuthInfo = getAgencyAuthInfo;
+const updateUserAdminProfile = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.user.update({
+        where: {
+            id,
+        },
+        data,
+    });
+    return result;
+});
+exports.updateUserAdminProfile = updateUserAdminProfile;
+const updateAgencyProfile = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma.agency.update({
+        where: {
+            id,
+        },
+        data,
+    });
+    return result;
+});
+exports.updateAgencyProfile = updateAgencyProfile;

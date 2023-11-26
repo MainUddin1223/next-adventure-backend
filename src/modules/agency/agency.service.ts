@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { IPayouts, IPlanData } from './agency.interface';
+import { IPayouts, IPlanData, IUpdatePlan } from './agency.interface';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
@@ -12,7 +12,7 @@ const createTourPlan = async (data: IPlanData) => {
   return result;
 };
 
-const updateTourPlan = async (planId: number, data: Partial<IPlanData>) => {
+const updateTourPlan = async (planId: number, data: IUpdatePlan) => {
   const isValidPlan = await prisma.plan.findUnique({
     where: {
       id: planId,
@@ -27,9 +27,6 @@ const updateTourPlan = async (planId: number, data: Partial<IPlanData>) => {
   const result = await prisma.plan.update({
     where: {
       id: planId,
-      deadline: {
-        gt: new Date(),
-      },
     },
     data,
   });
