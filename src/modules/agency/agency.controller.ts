@@ -153,7 +153,7 @@ const agencyStatics = catchAsync(async (req: Request, res: Response) => {
 const getPayouts = catchAsync(async (req: Request, res: Response) => {
   const agencyId = Number(req.user?.userId);
   const paginationOptions = pagination(req.query);
-  const status = req.params.status as
+  const status = req.query.status as
     | 'pending'
     | 'released'
     | 'postponed'

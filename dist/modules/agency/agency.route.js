@@ -1,25 +1,52 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const verifyAuth_1 = require("../../utils/auth_jwt/verifyAuth");
-const agency_controller_1 = require("./agency.controller");
+'use strict';
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+const express_1 = __importDefault(require('express'));
+const verifyAuth_1 = require('../../utils/auth_jwt/verifyAuth');
+const agency_controller_1 = require('./agency.controller');
 const router = express_1.default.Router();
 router
-    .route('/create-plan')
-    .post(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.createTourPlan);
+  .route('/create-plan')
+  .post(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.createTourPlan
+  );
 router
-    .route('/upcoming-schedules')
-    .get(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.getUpcomingSchedules);
-router.route('/plans').get(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.getAllPlans);
+  .route('/upcoming-schedules')
+  .get(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.getUpcomingSchedules
+  );
 router
-    .route('/plan/:id')
-    .patch(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.updateTourPlan)
-    .get(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.getPlanDetails);
+  .route('/plans')
+  .get(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.getAllPlans
+  );
 router
-    .route('/manage-booking/:id')
-    .patch(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.manageSchedule);
-router.route('/statics').get(verifyAuth_1.verifyAgency, agency_controller_1.agencyController.agencyStatics);
+  .route('/plan/:id')
+  .patch(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.updateTourPlan
+  )
+  .get(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.getPlanDetails
+  );
+router
+  .route('/manage-booking/:id')
+  .patch(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.manageSchedule
+  );
+router
+  .route('/statics')
+  .get(
+    verifyAuth_1.verifyAgency,
+    agency_controller_1.agencyController.agencyStatics
+  );
 exports.default = { agencyRouter: router };

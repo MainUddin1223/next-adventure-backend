@@ -222,20 +222,27 @@ const getPayouts = async (
 ) => {
   // const { skip, take, orderBy, page } = meta;
   const queryOption: { [key: string]: any } = {};
-  console.log(meta);
   if (status) {
     queryOption['status'] = status;
   }
-  const queryStatus = status && { status };
   const result = await prisma.payouts.findMany({
     // skip: Number(skip),
     // take,
     // orderBy,
     where: {
       agencyId: id,
-      ...queryStatus,
+      ...queryOption,
     },
-    include: {
+    select: {
+      status: true,
+      totalAmount: true,
+      createdAt: true,
+      planId: true,
+      booking: {
+        select: {
+          seats: true,
+        },
+      },
       plan: {
         select: {
           planName: true,
@@ -248,7 +255,7 @@ const getPayouts = async (
   //   where: { ...queryOption }
   // });
   // const totalPage = totalCount > take ? totalCount / Number(take) : 1;
-  return result;
+  return { result };
   // return {
   //   result,
   //   meta: { page: page, size: take, total: totalCount, totalPage },
