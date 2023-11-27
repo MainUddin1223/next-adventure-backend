@@ -427,6 +427,7 @@ const getUpcomingSchedules = (userId) => __awaiter(void 0, void 0, void 0, funct
                 select: {
                     departureTime: true,
                     departureFrom: true,
+                    deadline: true,
                     planName: true,
                     destination: true,
                 },
@@ -440,7 +441,7 @@ const getUpcomingSchedules = (userId) => __awaiter(void 0, void 0, void 0, funct
             },
         },
     });
-    return result;
+    return { result };
 });
 const getAllBookings = (userId, meta, filterOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { skip, take, orderBy, page } = meta;
@@ -475,7 +476,11 @@ const getAllBookings = (userId, meta, filterOptions) => __awaiter(void 0, void 0
         skip,
         take,
         orderBy,
-        where: Object.assign({ userId }, queryOption),
+        where: Object.assign(Object.assign({ userId }, queryOption), { plan: {
+                departureTime: {
+                    gt: new Date(),
+                },
+            } }),
         select: {
             id: true,
             totalAmount: true,
@@ -491,6 +496,7 @@ const getAllBookings = (userId, meta, filterOptions) => __awaiter(void 0, void 0
             },
             agency: {
                 select: {
+                    id: true,
                     name: true,
                     contactNo: true,
                     profileImg: true,

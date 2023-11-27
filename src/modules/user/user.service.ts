@@ -519,7 +519,7 @@ const getAllBookings = async (
       ...queryOption,
       plan: {
         departureTime: {
-          gt: new Date(),
+          lt: new Date(),
         },
       },
     },

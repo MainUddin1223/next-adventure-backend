@@ -169,7 +169,7 @@ const getAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
         message: user_constant_1.userControllerMsg.bookingsSuccess,
-        data: result.result,
+        data: result,
         meta: result.meta,
     });
 }));
