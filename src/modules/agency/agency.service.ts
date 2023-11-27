@@ -215,6 +215,46 @@ const agencyStatics = async (agencyId: number) => {
   return result;
 };
 
+const getPayouts = async (
+  id: number,
+  meta: IPaginationValue,
+  status?: 'pending' | 'released' | 'postponed'
+) => {
+  // const { skip, take, orderBy, page } = meta;
+  const queryOption: { [key: string]: any } = {};
+  console.log(meta);
+  if (status) {
+    queryOption['status'] = status;
+  }
+  const queryStatus = status && { status };
+  const result = await prisma.payouts.findMany({
+    // skip: Number(skip),
+    // take,
+    // orderBy,
+    where: {
+      agencyId: id,
+      ...queryStatus,
+    },
+    include: {
+      plan: {
+        select: {
+          planName: true,
+          price: true,
+        },
+      },
+    },
+  });
+  // const totalCount = await prisma.plan.count({
+  //   where: { ...queryOption }
+  // });
+  // const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  return result;
+  // return {
+  //   result,
+  //   meta: { page: page, size: take, total: totalCount, totalPage },
+  // };
+};
+
 export const agencyService = {
   createTourPlan,
   updateTourPlan,
@@ -223,4 +263,5 @@ export const agencyService = {
   getPlanDetails,
   manageSchedule,
   agencyStatics,
+  getPayouts,
 };

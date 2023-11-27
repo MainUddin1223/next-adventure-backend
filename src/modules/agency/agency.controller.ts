@@ -5,6 +5,7 @@ import sendResponse from '../../utils/helpers/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import {
   agencyControllerMsg,
+  payoutsFilter,
   upcomingSchedulesFilters,
 } from './agency.constant';
 import { createPlanSchema, updatePlanSchema } from './agency.validation';
@@ -122,19 +123,20 @@ const manageSchedule = catchAsync(async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const status = req.query.status as 'confirmed' | 'rejected';
   const agencyId = Number(req.user?.userId);
-  if (status == 'confirmed' || status == 'rejected') {
+  if (status == 'confirmed' || status !== 'rejected') {
+    const result = await agencyService.manageSchedule(id, agencyId, status);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: agencyControllerMsg.manageScheduleSuccess,
+      data: result,
+    });
+  } else {
     throw new ApiError(
       StatusCodes.NON_AUTHORITATIVE_INFORMATION,
       agencyControllerMsg.manageScheduleError
     );
   }
-  const result = await agencyService.manageSchedule(id, agencyId, status);
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: agencyControllerMsg.manageScheduleSuccess,
-    data: result,
-  });
 });
 
 const agencyStatics = catchAsync(async (req: Request, res: Response) => {
@@ -148,6 +150,34 @@ const agencyStatics = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPayouts = catchAsync(async (req: Request, res: Response) => {
+  const agencyId = Number(req.user?.userId);
+  const paginationOptions = pagination(req.query);
+  const status = req.params.status as
+    | 'pending'
+    | 'released'
+    | 'postponed'
+    | undefined;
+  if (payoutsFilter.includes(status as string) || status == undefined) {
+    const result = await agencyService.getPayouts(
+      agencyId,
+      paginationOptions,
+      status
+    );
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: agencyControllerMsg.staticsSuccess,
+      data: result,
+    });
+  } else {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      agencyControllerMsg.payoutsFilterError
+    );
+  }
+});
+
 export const agencyController = {
   createTourPlan,
   getUpcomingSchedules,
@@ -156,4 +186,5 @@ export const agencyController = {
   getPlanDetails,
   manageSchedule,
   agencyStatics,
+  getPayouts,
 };

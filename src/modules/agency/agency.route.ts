@@ -21,5 +21,6 @@ router
   .patch(verifyAgency, agencyController.manageSchedule);
 
 router.route('/statics').get(verifyAgency, agencyController.agencyStatics);
+router.route('/payouts').get(verifyAgency, agencyController.getPayouts);
 
 export default { agencyRouter: router };

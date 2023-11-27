@@ -249,6 +249,10 @@ const getTourPlanById = (id) => __awaiter(void 0, void 0, void 0, function* () {
             deadline: true,
             destination: true,
             events: true,
+            notAllowed: true,
+            totalSeats: true,
+            totalBooking: true,
+            status: true,
             agency: {
                 select: {
                     name: true,
