@@ -457,6 +457,7 @@ const getUpcomingSchedules = async (userId: number) => {
         select: {
           departureTime: true,
           departureFrom: true,
+          deadline: true,
           planName: true,
           destination: true,
         },
@@ -470,7 +471,7 @@ const getUpcomingSchedules = async (userId: number) => {
       },
     },
   });
-  return result;
+  return { result };
 };
 
 const getAllBookings = async (
@@ -516,6 +517,11 @@ const getAllBookings = async (
     where: {
       userId,
       ...queryOption,
+      plan: {
+        departureTime: {
+          gt: new Date(),
+        },
+      },
     },
     select: {
       id: true,
@@ -532,6 +538,7 @@ const getAllBookings = async (
       },
       agency: {
         select: {
+          id: true,
           name: true,
           contactNo: true,
           profileImg: true,

@@ -26,8 +26,10 @@ const createTourPlan = catchAsync(async (req: Request, res: Response) => {
     });
   } else {
     const agencyId = Number(req?.user?.userId);
+    const totalSeats = Number(req.body.totalSeats);
     const result = await agencyService.createTourPlan({
       ...req.body,
+      totalSeats,
       agencyId,
     });
     sendResponse(res, {
