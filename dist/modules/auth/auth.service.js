@@ -148,6 +148,11 @@ const getProfile = (id, role) => __awaiter(void 0, void 0, void 0, function* () 
                 contactNo: true,
                 about: true,
                 profileImg: true,
+                auth: {
+                    select: {
+                        email: true
+                    }
+                }
             },
         });
         return result;

@@ -173,6 +173,11 @@ const getProfile = async (id: number, role: string) => {
         contactNo: true,
         about: true,
         profileImg: true,
+        auth: {
+          select: {
+            email: true,
+          },
+        },
       },
     });
     return result;

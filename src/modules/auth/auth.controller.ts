@@ -22,6 +22,13 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
       message: error.details[0]?.message || authResponseMessage.signUpFailed,
       data: error.details,
     });
+  } else if (req.body?.password !== req.body?.confirmPassword) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: 'Confirm password not matched',
+      data: 'Confirm password not matched',
+    });
   } else {
     const result = await authService.signUp(req.body);
     sendResponse(res, {

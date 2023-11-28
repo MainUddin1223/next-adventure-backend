@@ -55,6 +55,7 @@ const getAgencies = async (
       name: true,
       profileImg: true,
       rating: true,
+      location: true,
       plans: {
         where: {
           deadline: {
@@ -197,6 +198,7 @@ const getAgencyById = async (id: number) => {
       profileImg: true,
       rating: true,
       totalReviews: true,
+      location: true,
       about: true,
       plans: {
         orderBy: {
@@ -314,6 +316,7 @@ const getLandingPageData = async () => {
       name: true,
       rating: true,
       profileImg: true,
+      location: true,
     },
   });
   const reviews = await prisma.reviews.findMany({

@@ -189,6 +189,7 @@ const getAgencyById = (id) => __awaiter(void 0, void 0, void 0, function* () {
             profileImg: true,
             rating: true,
             totalReviews: true,
+            location: true,
             about: true,
             plans: {
                 orderBy: {
@@ -302,6 +303,7 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
             name: true,
             rating: true,
             profileImg: true,
+            location: true
         },
     });
     const reviews = yield prisma.reviews.findMany({
@@ -478,7 +480,7 @@ const getAllBookings = (userId, meta, filterOptions) => __awaiter(void 0, void 0
         orderBy,
         where: Object.assign(Object.assign({ userId }, queryOption), { plan: {
                 departureTime: {
-                    gt: new Date(),
+                    lt: new Date(),
                 },
             } }),
         select: {
