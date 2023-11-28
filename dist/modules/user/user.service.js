@@ -64,6 +64,7 @@ const getAgencies = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
             name: true,
             profileImg: true,
             rating: true,
+            location: true,
             plans: {
                 where: {
                     deadline: {
@@ -303,7 +304,7 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
             name: true,
             rating: true,
             profileImg: true,
-            location: true
+            location: true,
         },
     });
     const reviews = yield prisma.reviews.findMany({

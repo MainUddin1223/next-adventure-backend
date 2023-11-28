@@ -81,7 +81,8 @@ const getAgencies = async (
 
   const totalCount = await prisma.agency.count();
 
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -180,7 +181,8 @@ const getTourPlans = async (
     },
   });
 
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -551,7 +553,8 @@ const getAllBookings = async (
   });
   const totalCount = await prisma.bookings.count({ where: { userId } });
 
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },

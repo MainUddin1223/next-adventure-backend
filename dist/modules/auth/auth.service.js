@@ -150,9 +150,9 @@ const getProfile = (id, role) => __awaiter(void 0, void 0, void 0, function* () 
                 profileImg: true,
                 auth: {
                     select: {
-                        email: true
-                    }
-                }
+                        email: true,
+                    },
+                },
             },
         });
         return result;

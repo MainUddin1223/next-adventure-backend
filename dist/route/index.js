@@ -10,6 +10,7 @@ const auth_route_1 = __importDefault(require("../modules/auth/auth.route"));
 const agency_route_1 = __importDefault(require("../modules/agency/agency.route"));
 const user_route_1 = __importDefault(require("../modules/user/user.route"));
 const admin_routes_1 = __importDefault(require("../modules/admin/admin.routes"));
+const payment_route_1 = __importDefault(require("../modules/payment/payment.route"));
 const router = express_1.default.Router();
 const defaultRoutes = [
     {
@@ -27,6 +28,10 @@ const defaultRoutes = [
     {
         path: '/admin',
         route: admin_routes_1.default.adminRouter,
+    },
+    {
+        path: '/payment',
+        route: payment_route_1.default.paymentRouter,
     },
 ];
 defaultRoutes.forEach(route => {

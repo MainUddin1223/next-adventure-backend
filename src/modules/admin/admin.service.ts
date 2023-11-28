@@ -64,7 +64,8 @@ const getUsersOrAdmins = async (
   const totalCount = await prisma.auth.count({
     where: { role },
   });
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -130,7 +131,8 @@ const getAgencies = async (
   const totalCount = await prisma.auth.count({
     where: { role: 'agency' },
   });
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -246,7 +248,8 @@ const upcomingSchedules = async (
       },
     },
   });
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -315,7 +318,8 @@ const getAllPlans = async (
     },
   });
   const totalCount = await prisma.plan.count();
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },
@@ -393,7 +397,8 @@ const getBookings = async (
     },
   });
   const totalCount = await prisma.plan.count();
-  const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+  const totalPage =
+    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },

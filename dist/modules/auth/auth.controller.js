@@ -21,7 +21,7 @@ const auth_validation_1 = require("./auth.validation");
 const auth_constant_1 = require("./auth.constant");
 const apiError_1 = __importDefault(require("../../utils/errorHandlers/apiError"));
 const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     const { error } = yield auth_validation_1.signUpSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
@@ -29,6 +29,14 @@ const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
             success: false,
             message: ((_a = error.details[0]) === null || _a === void 0 ? void 0 : _a.message) || auth_constant_1.authResponseMessage.signUpFailed,
             data: error.details,
+        });
+    }
+    else if (((_b = req.body) === null || _b === void 0 ? void 0 : _b.password) !== ((_c = req.body) === null || _c === void 0 ? void 0 : _c.confirmPassword)) {
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+            success: false,
+            message: 'Confirm password not matched',
+            data: 'Confirm password not matched',
         });
     }
     else {
@@ -42,13 +50,13 @@ const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
     }
 }));
 const registerAgency = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _d;
     const { error } = yield auth_validation_1.agencyRegisterSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
             success: false,
-            message: ((_b = error.details[0]) === null || _b === void 0 ? void 0 : _b.message) || auth_constant_1.authResponseMessage.agencyRegisterFailed,
+            message: ((_d = error.details[0]) === null || _d === void 0 ? void 0 : _d.message) || auth_constant_1.authResponseMessage.agencyRegisterFailed,
             data: error.details,
         });
     }
@@ -63,13 +71,13 @@ const registerAgency = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     }
 }));
 const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+    var _e;
     const { error } = yield auth_validation_1.signUpSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
             success: false,
-            message: (_c = error.details[0]) === null || _c === void 0 ? void 0 : _c.message,
+            message: (_e = error.details[0]) === null || _e === void 0 ? void 0 : _e.message,
             data: error.details,
         });
     }
@@ -84,8 +92,8 @@ const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
     }
 }));
 const getProfileData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _d, _e;
-    const result = yield auth_service_1.authService.getProfile((_d = req === null || req === void 0 ? void 0 : req.user) === null || _d === void 0 ? void 0 : _d.userId, (_e = req === null || req === void 0 ? void 0 : req.user) === null || _e === void 0 ? void 0 : _e.role);
+    var _f, _g;
+    const result = yield auth_service_1.authService.getProfile((_f = req === null || req === void 0 ? void 0 : req.user) === null || _f === void 0 ? void 0 : _f.userId, (_g = req === null || req === void 0 ? void 0 : req.user) === null || _g === void 0 ? void 0 : _g.role);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
@@ -94,8 +102,8 @@ const getProfileData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     });
 }));
 const deleteAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _f;
-    const result = yield auth_service_1.authService.deleteAccount((_f = req.user) === null || _f === void 0 ? void 0 : _f.authId);
+    var _h;
+    const result = yield auth_service_1.authService.deleteAccount((_h = req.user) === null || _h === void 0 ? void 0 : _h.authId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
@@ -104,16 +112,16 @@ const deleteAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const updateProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _g, _h, _j, _k, _l;
-    const validateSchema = ((_g = req.user) === null || _g === void 0 ? void 0 : _g.role) === 'agency'
+    var _j, _k, _l, _m, _o;
+    const validateSchema = ((_j = req.user) === null || _j === void 0 ? void 0 : _j.role) === 'agency'
         ? auth_validation_1.updateAgencyProfileSchema
         : auth_validation_1.updateUserProfileSchema;
     const { error } = yield validateSchema.validate(req.body);
     if (error) {
-        console.log((_h = error.details[0]) === null || _h === void 0 ? void 0 : _h.message);
-        throw new apiError_1.default(500, (_j = error.details[0]) === null || _j === void 0 ? void 0 : _j.message);
+        console.log((_k = error.details[0]) === null || _k === void 0 ? void 0 : _k.message);
+        throw new apiError_1.default(500, (_l = error.details[0]) === null || _l === void 0 ? void 0 : _l.message);
     }
-    yield auth_service_1.authService.updateProfile((_k = req === null || req === void 0 ? void 0 : req.user) === null || _k === void 0 ? void 0 : _k.role, (_l = req === null || req === void 0 ? void 0 : req.user) === null || _l === void 0 ? void 0 : _l.userId, req.body);
+    yield auth_service_1.authService.updateProfile((_m = req === null || req === void 0 ? void 0 : req.user) === null || _m === void 0 ? void 0 : _m.role, (_o = req === null || req === void 0 ? void 0 : req.user) === null || _o === void 0 ? void 0 : _o.userId, req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
