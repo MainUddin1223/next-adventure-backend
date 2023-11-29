@@ -88,7 +88,7 @@ const getAgencies = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
         }
     });
     const totalCount = yield prisma.agency.count();
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -173,7 +173,7 @@ const getTourPlans = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, 
             },
         },
     });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -508,7 +508,7 @@ const getAllBookings = (userId, meta, filterOptions) => __awaiter(void 0, void 0
         },
     });
     const totalCount = yield prisma.bookings.count({ where: { userId } });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },

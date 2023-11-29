@@ -94,7 +94,7 @@ const getScheduledPlans = (meta, filterOptions, id) => __awaiter(void 0, void 0,
         },
     });
     const totalCount = yield prisma.plan.count({ where: { agencyId: id } });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -135,7 +135,7 @@ const getAllPlans = (meta, filterOptions, id) => __awaiter(void 0, void 0, void 
         },
     });
     const totalCount = yield prisma.plan.count();
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },

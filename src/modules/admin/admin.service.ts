@@ -64,8 +64,7 @@ const getUsersOrAdmins = async (
   const totalCount = await prisma.auth.count({
     where: { role },
   });
-  const totalPage =
-    totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
+  const totalPage = totalCount / Number(take);
   return {
     result,
     meta: { page: page, size: take, total: totalCount, totalPage },

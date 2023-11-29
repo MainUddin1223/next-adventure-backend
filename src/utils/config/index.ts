@@ -11,6 +11,7 @@ export default {
   server_url: process.env.SERVER_URL,
   api_route: process.env.API_ROUTE,
   bycrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
+  stripe_secret: process.env.STRIPE_SECRET,
   ssl: {
     store_id: process.env.STORE_ID,
     store_pass: process.env.STORE_PASS,

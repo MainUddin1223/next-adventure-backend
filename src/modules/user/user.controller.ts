@@ -91,6 +91,30 @@ const getLandingPageData = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getOrderSummary = catchAsync(async (req: Request, res: Response) => {
+  const { error } = bookPlanSchema.validate(req.body);
+
+  if (error) {
+    sendResponse(res, {
+      statusCode: StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+      success: false,
+      message: error.details[0]?.message || userControllerMsg.bookPlanError,
+      data: error.details,
+    });
+  } else {
+    const planId = Number(req.params.id);
+    const seats = Number(req.body.totalSeat);
+    const result = await userService.getOrderSummary({ planId, seats });
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: userControllerMsg.bookPlanSuccess,
+      data: result,
+    });
+  }
+});
+
 const bookPlan = catchAsync(async (req: Request, res: Response) => {
   const { error } = await bookPlanSchema.validate(req.body);
 
@@ -198,4 +222,5 @@ export const userController = {
   getUpcomingSchedules,
   getAllBookings,
   manageSchedule,
+  getOrderSummary,
 };

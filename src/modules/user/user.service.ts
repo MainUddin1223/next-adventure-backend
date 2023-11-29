@@ -1,15 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import { IFilterOption, IPaginationValue } from '../../utils/helpers/interface';
+import stripe from 'stripe';
+
 import {
   BookPlanPayload,
   IAgencyResult,
+  IOrderSummary,
   IReviewPlan,
   IReviewPlatform,
 } from './user.interface';
 import ApiError from '../../utils/errorHandlers/apiError';
 import { StatusCodes } from 'http-status-codes';
 import { userServiceMessage } from './user.constant';
-
+import config from '../../utils/config';
+const stripeToken = config.stripe_secret as string;
 const prisma = new PrismaClient();
 
 const getAgencies = async (
@@ -311,16 +315,37 @@ const getLandingPageData = async () => {
     },
   });
 
-  const agencies = await prisma.agency.findMany({
+  const agencies: IAgencyResult[] | [] = await prisma.agency.findMany({
     take: 6,
     select: {
       id: true,
       name: true,
-      rating: true,
       profileImg: true,
+      rating: true,
       location: true,
+      plans: {
+        where: {
+          deadline: {
+            gt: new Date(),
+          },
+        },
+        select: {
+          id: true,
+        },
+      },
     },
   });
+
+  agencies.forEach(agency => {
+    if (agency?.plans && agency.plans.length) {
+      agency['ongoingPlans'] = agency.plans.length;
+      delete agency.plans;
+    } else {
+      agency['ongoingPlans'] = 0;
+      delete agency.plans;
+    }
+  });
+
   const reviews = await prisma.reviews.findMany({
     select: {
       rating: true,
@@ -367,6 +392,7 @@ const bookPlan = async (payload: BookPlanPayload) => {
     agencyId: isValidPlan.agencyId,
     planId,
   };
+
   const result = await prisma.$transaction(async prisma => {
     const booking = await prisma.bookings.create({ data: bookingData });
     await prisma.payouts.create({
@@ -439,7 +465,30 @@ const reviewPlan = async (payload: IReviewPlan) => {
     agencyId: validReview.agencyId,
     bookingId: validReview.id,
   };
-  await prisma.planReviews.create({ data });
+  const agency = await prisma.agency.findUnique({
+    where: {
+      id: validReview.agencyId,
+    },
+  });
+
+  const totalReviews = Number(agency?.totalReviews) + 1;
+  const totalStar = Number(agency?.totalStar) + rating;
+  const totalRating = totalStar / totalReviews;
+
+  await prisma.$transaction(async prisma => {
+    await prisma.agency.update({
+      where: {
+        id: validReview.agencyId,
+      },
+      data: {
+        totalReviews,
+        totalStar,
+        rating: totalRating,
+      },
+    });
+    await prisma.planReviews.create({ data });
+  });
+
   return { message: 'Review submitted successfully' };
 };
 
@@ -609,6 +658,48 @@ const manageSchedule = async (
   return result;
 };
 
+const getOrderSummary = async (payload: IOrderSummary) => {
+  const stripeInit = new stripe(stripeToken);
+  const { planId, seats } = payload;
+
+  const isValidPlan = await prisma.plan.findUnique({
+    where: {
+      id: planId,
+      deadline: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!isValidPlan) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      userServiceMessage.invalidPlan
+    );
+  }
+
+  const totalBooking = isValidPlan.totalBooking + Number(seats);
+
+  if (totalBooking > isValidPlan.totalSeats) {
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      userServiceMessage.seatsUnavailable
+    );
+  }
+
+  const totalAmount =
+    Number((Number(isValidPlan.price) * seats).toFixed(2)) * 100;
+
+  const paymentIntent = await stripeInit.paymentIntents.create({
+    amount: totalAmount,
+    currency: 'usd',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+  return paymentIntent;
+};
+
 export const userService = {
   getAgencies,
   getTourPlans,
@@ -621,4 +712,5 @@ export const userService = {
   getUpcomingSchedules,
   getAllBookings,
   manageSchedule,
+  getOrderSummary,
 };

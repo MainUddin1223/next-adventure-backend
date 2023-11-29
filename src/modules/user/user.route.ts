@@ -13,6 +13,9 @@ router.route('/plans/:id').get(verifyAuth, userController.getPlanDetails);
 // user api
 router.route('/review').post(verifyUser, userController.reviewPlatform);
 router.route('/book-plan/:id').post(verifyUser, userController.bookPlan);
+router
+  .route('/order-summary/:id')
+  .post(verifyUser, userController.getOrderSummary);
 router.route('/booking/review/:id').post(verifyUser, userController.reviewPlan);
 router
   .route('/upcoming-schedule')

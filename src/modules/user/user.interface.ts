@@ -30,3 +30,7 @@ export interface IAgencyResult {
 export interface IResult {
   result: IAgencyResult[] | [];
 }
+export interface IOrderSummary {
+  planId: number;
+  seats: number;
+}

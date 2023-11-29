@@ -79,7 +79,7 @@ const getUsersOrAdmins = (meta, filterOptions, role) => __awaiter(void 0, void 0
     const totalCount = yield prisma.auth.count({
         where: { role },
     });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount / Number(take);
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -137,7 +137,7 @@ const getAgencies = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
     const totalCount = yield prisma.auth.count({
         where: { role: 'agency' },
     });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -243,7 +243,7 @@ const upcomingSchedules = (meta, filterOptions) => __awaiter(void 0, void 0, voi
             },
         },
     });
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -304,7 +304,7 @@ const getAllPlans = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
         },
     });
     const totalCount = yield prisma.plan.count();
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },
@@ -373,7 +373,7 @@ const getBookings = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, f
         },
     });
     const totalCount = yield prisma.plan.count();
-    const totalPage = totalCount > take ? totalCount / Number(take) : 1;
+    const totalPage = totalCount > take ? Math.ceil(totalCount / Number(take)) : 1;
     return {
         result,
         meta: { page: page, size: take, total: totalCount, totalPage },

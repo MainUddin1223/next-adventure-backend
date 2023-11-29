@@ -40,6 +40,7 @@ const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
         });
     }
     else {
+        delete req.body.confirmPassword;
         const result = yield auth_service_1.authService.signUp(req.body);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.OK,
@@ -72,7 +73,7 @@ const registerAgency = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
 }));
 const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e;
-    const { error } = yield auth_validation_1.signUpSchema.validate(req.body);
+    const { error } = yield auth_validation_1.loginSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,

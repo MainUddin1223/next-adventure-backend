@@ -5,6 +5,7 @@ import sendResponse from '../../utils/helpers/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import {
   agencyRegisterSchema,
+  loginSchema,
   signUpSchema,
   updateAgencyProfileSchema,
   updateUserProfileSchema,
@@ -30,6 +31,7 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
       data: 'Confirm password not matched',
     });
   } else {
+    delete req.body.confirmPassword;
     const result = await authService.signUp(req.body);
     sendResponse(res, {
       statusCode: StatusCodes.OK,
@@ -63,7 +65,7 @@ const registerAgency = catchAsync(async (req: Request, res: Response) => {
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
-  const { error } = await signUpSchema.validate(req.body);
+  const { error } = await loginSchema.validate(req.body);
 
   if (error) {
     sendResponse(res, {
