@@ -25,9 +25,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const client_1 = require("@prisma/client");
+const stripe_1 = __importDefault(require("stripe"));
 const apiError_1 = __importDefault(require("../../utils/errorHandlers/apiError"));
 const http_status_codes_1 = require("http-status-codes");
 const user_constant_1 = require("./user.constant");
+const config_1 = __importDefault(require("../../utils/config"));
+const stripeToken = config_1.default.stripe_secret;
 const prisma = new client_1.PrismaClient();
 const getAgencies = (meta, filterOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { skip, take, orderBy, page } = meta;
@@ -302,10 +305,30 @@ const getLandingPageData = () => __awaiter(void 0, void 0, void 0, function* () 
         select: {
             id: true,
             name: true,
-            rating: true,
             profileImg: true,
+            rating: true,
             location: true,
+            plans: {
+                where: {
+                    deadline: {
+                        gt: new Date(),
+                    },
+                },
+                select: {
+                    id: true,
+                },
+            },
         },
+    });
+    agencies.forEach(agency => {
+        if ((agency === null || agency === void 0 ? void 0 : agency.plans) && agency.plans.length) {
+            agency['ongoingPlans'] = agency.plans.length;
+            delete agency.plans;
+        }
+        else {
+            agency['ongoingPlans'] = 0;
+            delete agency.plans;
+        }
     });
     const reviews = yield prisma.reviews.findMany({
         select: {
@@ -408,7 +431,27 @@ const reviewPlan = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         agencyId: validReview.agencyId,
         bookingId: validReview.id,
     };
-    yield prisma.planReviews.create({ data });
+    const agency = yield prisma.agency.findUnique({
+        where: {
+            id: validReview.agencyId,
+        },
+    });
+    const totalReviews = Number(agency === null || agency === void 0 ? void 0 : agency.totalReviews) + 1;
+    const totalStar = Number(agency === null || agency === void 0 ? void 0 : agency.totalStar) + rating;
+    const totalRating = totalStar / totalReviews;
+    yield prisma.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
+        yield prisma.agency.update({
+            where: {
+                id: validReview.agencyId,
+            },
+            data: {
+                totalReviews,
+                totalStar,
+                rating: totalRating,
+            },
+        });
+        yield prisma.planReviews.create({ data });
+    }));
     return { message: 'Review submitted successfully' };
 });
 const getUpcomingSchedules = (userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -556,6 +599,34 @@ const manageSchedule = (id, userId, status) => __awaiter(void 0, void 0, void 0,
     }
     return result;
 });
+const getOrderSummary = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const stripeInit = new stripe_1.default(stripeToken);
+    const { planId, seats } = payload;
+    const isValidPlan = yield prisma.plan.findUnique({
+        where: {
+            id: planId,
+            deadline: {
+                gt: new Date(),
+            },
+        },
+    });
+    if (!isValidPlan) {
+        throw new apiError_1.default(http_status_codes_1.StatusCodes.NOT_ACCEPTABLE, user_constant_1.userServiceMessage.invalidPlan);
+    }
+    const totalBooking = isValidPlan.totalBooking + Number(seats);
+    if (totalBooking > isValidPlan.totalSeats) {
+        throw new apiError_1.default(http_status_codes_1.StatusCodes.NOT_ACCEPTABLE, user_constant_1.userServiceMessage.seatsUnavailable);
+    }
+    const totalAmount = Number((Number(isValidPlan.price) * seats).toFixed(2)) * 100;
+    const paymentIntent = yield stripeInit.paymentIntents.create({
+        amount: totalAmount,
+        currency: 'usd',
+        automatic_payment_methods: {
+            enabled: true,
+        },
+    });
+    return paymentIntent;
+});
 exports.userService = {
     getAgencies,
     getTourPlans,
@@ -568,4 +639,5 @@ exports.userService = {
     getUpcomingSchedules,
     getAllBookings,
     manageSchedule,
+    getOrderSummary,
 };

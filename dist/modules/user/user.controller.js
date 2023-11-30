@@ -95,9 +95,9 @@ const getLandingPageData = (0, catchAsync_1.default)((req, res) => __awaiter(voi
         data: result,
     });
 }));
-const bookPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d;
-    const { error } = yield user_validator_1.bookPlanSchema.validate(req.body);
+const getOrderSummary = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
+    const { error } = user_validator_1.bookPlanSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
@@ -108,7 +108,30 @@ const bookPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
     }
     else {
         const planId = Number(req.params.id);
-        const userId = Number((_d = req.user) === null || _d === void 0 ? void 0 : _d.userId);
+        const seats = Number(req.body.totalSeat);
+        const result = yield user_service_1.userService.getOrderSummary({ planId, seats });
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_codes_1.StatusCodes.OK,
+            success: true,
+            message: user_constant_1.userControllerMsg.bookPlanSuccess,
+            data: result,
+        });
+    }
+}));
+const bookPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _d, _e;
+    const { error } = yield user_validator_1.bookPlanSchema.validate(req.body);
+    if (error) {
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
+            success: false,
+            message: ((_d = error.details[0]) === null || _d === void 0 ? void 0 : _d.message) || user_constant_1.userControllerMsg.bookPlanError,
+            data: error.details,
+        });
+    }
+    else {
+        const planId = Number(req.params.id);
+        const userId = Number((_e = req.user) === null || _e === void 0 ? void 0 : _e.userId);
         const seats = Number(req.body.totalSeat);
         const result = yield user_service_1.userService.bookPlan({ planId, userId, seats });
         (0, sendResponse_1.default)(res, {
@@ -120,19 +143,19 @@ const bookPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
     }
 }));
 const reviewPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e, _f;
+    var _f, _g;
     const { error } = yield user_validator_1.reviewSchema.validate(req.body);
     if (error) {
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_codes_1.StatusCodes.NON_AUTHORITATIVE_INFORMATION,
             success: false,
-            message: ((_e = error.details[0]) === null || _e === void 0 ? void 0 : _e.message) || user_constant_1.userControllerMsg.planReviewError,
+            message: ((_f = error.details[0]) === null || _f === void 0 ? void 0 : _f.message) || user_constant_1.userControllerMsg.planReviewError,
             data: error.details,
         });
     }
     else {
         const bookingId = Number(req.params.id);
-        const userId = Number((_f = req.user) === null || _f === void 0 ? void 0 : _f.userId);
+        const userId = Number((_g = req.user) === null || _g === void 0 ? void 0 : _g.userId);
         const { rating, feedback } = req.body;
         const result = yield user_service_1.userService.reviewPlan({
             bookingId,
@@ -149,8 +172,8 @@ const reviewPlan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     }
 }));
 const getUpcomingSchedules = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _g;
-    const userId = Number((_g = req.user) === null || _g === void 0 ? void 0 : _g.userId);
+    var _h;
+    const userId = Number((_h = req.user) === null || _h === void 0 ? void 0 : _h.userId);
     const result = yield user_service_1.userService.getUpcomingSchedules(userId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -160,10 +183,10 @@ const getUpcomingSchedules = (0, catchAsync_1.default)((req, res) => __awaiter(v
     });
 }));
 const getAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _h;
+    var _j;
     const paginationOptions = yield (0, pagination_1.pagination)(req.query);
     const filter = (0, pick_1.default)(req.query, user_constant_1.agenciesSearchOptions);
-    const userId = Number((_h = req.user) === null || _h === void 0 ? void 0 : _h.userId);
+    const userId = Number((_j = req.user) === null || _j === void 0 ? void 0 : _j.userId);
     const result = yield user_service_1.userService.getAllBookings(userId, paginationOptions, filter);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -174,10 +197,10 @@ const getAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     });
 }));
 const manageSchedule = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _j;
+    var _k;
     const id = Number(req.params.id);
     const status = req.query.status;
-    const userId = Number((_j = req.user) === null || _j === void 0 ? void 0 : _j.userId);
+    const userId = Number((_k = req.user) === null || _k === void 0 ? void 0 : _k.userId);
     const result = yield user_service_1.userService.manageSchedule(id, userId, status);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -198,4 +221,5 @@ exports.userController = {
     getUpcomingSchedules,
     getAllBookings,
     manageSchedule,
+    getOrderSummary,
 };
