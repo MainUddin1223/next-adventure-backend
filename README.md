@@ -1,5 +1,5 @@
 Frontend repo : https://github.com/MainUddin1223/next-adventure-frontend
-Server repo : https://github.com/MainUddin1223/next-adventure-server
+Server repo : https://github.com/MainUddin1223/next-adventure-backend
 
 Live Link : https://next-adventure-three.vercel.app/
 
