@@ -3,7 +3,7 @@ Server repo : https://github.com/MainUddin1223/next-adventure-backend
 
 Live Link : https://next-adventure-three.vercel.app/
 
-credintials : {
+credentials: {
 user: user@gmail@com
 agency: agency@gmail.com
 super_admin : super_admin@gmail.com
